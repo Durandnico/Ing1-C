@@ -21,88 +21,61 @@
 
 /*-------------------------------Functions--------------------------------------------------------------------------------------*/
 
-int upper(char str_text[]) {
-    char *p; //loop variable
-    int int_gap; //ascii gap between capital and lowercase letter
-    int int_res; //check if string is alphabetic only
-
-    int_res = 1;
-    int_gap = 'A' - 'a';
-
-    for( p = str_text; *p; p++){
-        if( (*p < 'a' || *p > 'z') && (*p < 'A' && *p > 'Z') && *p != ' '){
-            int_res = 0;
-        }
-
-        if (*p <= 'z' && *p >= 'a'){
-            *p = (*p) + int_gap;    
-        };
-    }
-    return int_res;
-}
-
-/*------------------------------------------------------------------------------------------------------------------------------------*/
-
 int* createRotor(int int_gap) {
      
     int* pint_rotor; //array that gonna serve as rotor (A->C && B->D ... if gap == 2)
     int i; //loop variable
 
-    /*init array (26 letters of the alphabet)*/
-    pint_rotor = malloc(26 * sizeof(int));
+    /*init array (128 char of the ascii table)*/
+    pint_rotor = malloc(128 * sizeof(int));
 
     /*
-    *Affect each letter to the correct position
-    *   if A => C then C will be index 0
+    *Affect each ascii char the value of the translate one
     */
-    for (i = 0; i < 26 ; i++){
-        pint_rotor[i] = i + (int_gap % 26);
-    }
+    for (i = 0; i < 128 ; i++){
+        pint_rotor[i] = i;
 
+        if((i <= 'Z' && i >= 'A') || (i <= 'z' && i >= 'a')){
+            pint_rotor[i] += ((i + int_gap)%26 < int_gap)? 26 - int_gap : int_gap ;
+        }
+    }
     return pint_rotor;
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------*/
 
-int cesar(char* str_msg, const int int_gap) {
+void cesar(char* str_msg, const int int_gap) {
     char *p; //loop variable
     char char_c; //current character
-    int* pint_rotor; //similar at Alberti's dial (cadran d'alberti)
+    int* pint_rotor; //similar at Alberti's dial (cadran d'alberti) but for all the ascii Table
 
     /*init the rotor*/
     pint_rotor = createRotor(int_gap);
 
     /*change each letter for it's equivalent in the rotor*/
     for( p = str_msg; *p; p++){
-        if(*p != ' '){
-            *p = pint_rotor[*p];
-        }
-    }    
-
-    return 1;
+        *p = pint_rotor[*p];
+    }
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------*/
 
-int vigenere(char* str_msg, const char* str_key) {
+void vigenere(char* str_msg, const char* str_key) {
     int i; //loop variable 
     char *p; //loop variable
     int int_len; //lenght of the key
-    char** ppchar_rotors; //array of rotors (en: Alberti's dial | fr: cadran d'alberti)
-
-    /*Put all letter in capital letter and check if string is alphabetic only*/
-    if (upper(str_msg) == 0){
-        return 0;
-    }
+    int** ppchar_rotors; //array of rotors (en: Alberti's dial | fr: cadran d'alberti)
+    int int_gap; //find the gap of each letter
 
     /*number of rotor that have to be create (= key's lenght)*/
     int_len = strlen(str_key);
-    ppchar_rotors = malloc(int_len * sizeof(char*));
+    ppchar_rotors = malloc(int_len * sizeof(int*));
 
     /*Create a rotor for each letter of the key*/
     i = 0;
     for( p = str_key; *p; p++){
-        ppchar_rotors[i++] = createRotor(*p - 'A');
+        int_gap = (*p <= 'z' && *p >= 'a')? *p - 'a' + 1: (*p <= 'Z' && *p >= 'A')? *p - 'A' + 1 : 1;
+        ppchar_rotors[i++] = createRotor(int_gap);
     }
 
     /*for each letter of the msg:
@@ -111,16 +84,14 @@ int vigenere(char* str_msg, const char* str_key) {
     */
     i = 0;
     for( p = str_msg; *p; p++){
-        *p = ppchar_rotors[i++][*p - 'A'];
+        *p = ppchar_rotors[i++][*p];
         i %= int_len;
     }
-
-    return 1;
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------*/
 
-int scytale(char* str_msg) {
+void scytale(char* str_msg) {
     int i; //loop variable
     int j; //loop varialle
     char** ppchar_matrix; //bloc of N*N to crypt the message
@@ -128,11 +99,6 @@ int scytale(char* str_msg) {
     int int_N; //lenght N of the matrix
     int int_pos; //position in the message
     char char_tmp; //temp var to swap in the matrix
-
-    /*Put all letter in capital letter and check if string is alphabetic only*/
-    if (upper(str_msg) == 0){
-        return 0;
-    }
 
     /*Calc the lenght of the matrix*/
     int_len = strlen(str_msg);
@@ -151,7 +117,7 @@ int scytale(char* str_msg) {
 
     /*transpose the matrix (line => column)*/
     for( i = 0; i < int_N; i++){
-        for( j = 0; j < int_N; j++){
+        for( j = i; j < int_N; j++){
             char_tmp = ppchar_matrix[i][j];
             ppchar_matrix[i][j] = ppchar_matrix[j][i];
             ppchar_matrix[j][i] = char_tmp;
@@ -162,11 +128,9 @@ int scytale(char* str_msg) {
     int_pos = 0;
     for( i = 0; i < int_N; i++){
         for( j = 0; j < int_N; j++){
-            str_msg[int_pos++] = ppchar_matrix[i][j];
+                str_msg[int_pos++] = ppchar_matrix[i][j];
         }
     }
-
-    return 1;
 }
 
 

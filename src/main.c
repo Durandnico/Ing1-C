@@ -39,10 +39,14 @@
 int main (int argc, char** argv) {
 
     char tset[1028];
-    strcpy(tset, "Bonjour je suis Titouan Pradal");
+    strcpy(tset, "rendez vous demain soir a la tireuse");
 
-    upper(tset);
-    //cesar(tset,3);
-    printf("\n: %s\n", tset);     
+    //upper(tset);
+    printf("\n%s", tset);
+    //cesar(tset,1);
+    //vigenere(tset, "ab");
+    scytale(tset);
+    printf("\n: %s\n", tset);
+
     return 0;
 }
