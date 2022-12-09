@@ -19,12 +19,6 @@
 //librairies
 #include "ParseArg.h"
 
-/*! 
- \def ERREUR
- \brief Write an error message in stderr
-*/
-#define ERROR(err) fprintf(stderr, '%s\n', err)
-
 /*!
  *  \fn void help(void)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
@@ -95,7 +89,7 @@ decalage (char* str_arg)
 int
 message(char* str_arg)
 {
-    
+    return 0;
 }
 
 /*!
@@ -110,5 +104,5 @@ message(char* str_arg)
 int
 parsingArgv(int int_argc, char** pstr_argv)
 {
-
+    return 0;
 }

@@ -18,6 +18,7 @@
 
 //librairies
 #include <stdio.h>
+#include "cryptage.h"
 
 /*! 
  \def ERREUR
@@ -36,6 +37,11 @@
  *  \return 0 if no error, -1 otherwise
  */
 int main (int argc, char** argv) {
-     
+
+    char* tset = "Bonjour je suis Titouan Pradal";
+
+    upper(tset);
+    //cesar(tset,3);
+    printf("\n: %s\n", tset);     
     return 0;
 }

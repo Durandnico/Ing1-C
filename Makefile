@@ -1,13 +1,14 @@
 OBJ=$(patsubst %.c,%.o,$(wildcard src/*.c))
+CFLAGS = -Wall -Wextra -g -Og
+LDFLAGS = -lm
 
+all: bin/Main 
 
-all: Main 
-
-Main: $(OBJ)
-	cc $? -o bin/$@ -lm -Wall -Wextra -Werror
+bin/Main: $(OBJ)
+	cc $? -o $@ $(LDFLAGS)
 
 %.o: %.c %.h
-	cc -c $< -o $@ -Wall -Wextra -lm -Werror
+	cc -c $< -o $@ $(CFLAGS)
 
 clean: 
 	rm -f src/*.o
@@ -21,8 +22,8 @@ restore:
 	cp -fr .save restore
 
 init:	
-	mkdir src bin 2> /dev/null
-	touch src/main.c
+	mkdir -p src bin 2> /dev/null
+	mv -f *.c *.h src/ 2> /dev/null
 
 doc:
 	rm -fr doc
