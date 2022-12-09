@@ -38,7 +38,8 @@
  */
 int main (int argc, char** argv) {
 
-    char* tset = "Bonjour je suis Titouan Pradal";
+    char tset[1028];
+    strcpy(tset, "Bonjour je suis Titouan Pradal");
 
     upper(tset);
     //cesar(tset,3);

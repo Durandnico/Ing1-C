@@ -21,7 +21,7 @@
 
 /*-------------------------------Functions--------------------------------------------------------------------------------------*/
 
-int upper(char* str_text) {
+int upper(char str_text[]) {
     char *p; //loop variable
     int int_gap; //ascii gap between capital and lowercase letter
     int int_res; //check if string is alphabetic only
@@ -30,40 +30,36 @@ int upper(char* str_text) {
     int_gap = 'A' - 'a';
 
     for( p = str_text; *p; p++){
-        /*
         if( (*p < 'a' || *p > 'z') && (*p < 'A' && *p > 'Z') && *p != ' '){
             int_res = 0;
         }
 
         if (*p <= 'z' && *p >= 'a'){
             *p = (*p) + int_gap;    
-        };*/
-        (*p) = 'a';
-        putchar(*p);
+        };
     }
-
     return int_res;
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------*/
 
-char* createRotor(int int_gap) {
+int* createRotor(int int_gap) {
      
-    char* pchar_rotor; //array that gonna serve as rotor (A->C && B->D ... if gap == 2)
+    int* pint_rotor; //array that gonna serve as rotor (A->C && B->D ... if gap == 2)
     int i; //loop variable
 
     /*init array (26 letters of the alphabet)*/
-    pchar_rotor = malloc(26 * sizeof(char));
+    pint_rotor = malloc(26 * sizeof(int));
 
     /*
     *Affect each letter to the correct position
     *   if A => C then C will be index 0
     */
-    for (i = 'A'; i <= 'Z' ; i++){
-        pchar_rotor[i - 'A'] = i + (int_gap % 26);
+    for (i = 0; i < 26 ; i++){
+        pint_rotor[i] = i + (int_gap % 26);
     }
 
-    return pchar_rotor;
+    return pint_rotor;
 }
 
 /*------------------------------------------------------------------------------------------------------------------------------------*/
@@ -71,21 +67,15 @@ char* createRotor(int int_gap) {
 int cesar(char* str_msg, const int int_gap) {
     char *p; //loop variable
     char char_c; //current character
-    char* pchar_rotor; //similar at Alberti's dial (cadran d'alberti)
-
-    /*Put all letter in capital letter and check if string is alphabetic only*/
-    if (upper(str_msg) == 0){
-        return 0;
-    }
+    int* pint_rotor; //similar at Alberti's dial (cadran d'alberti)
 
     /*init the rotor*/
-    pchar_rotor = createRotor(int_gap);
+    pint_rotor = createRotor(int_gap);
 
     /*change each letter for it's equivalent in the rotor*/
     for( p = str_msg; *p; p++){
         if(*p != ' '){
-            char_c = *p;
-            *p = pchar_rotor[char_c - 'A'];
+            *p = pint_rotor[*p];
         }
     }    
 

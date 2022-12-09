@@ -33,7 +33,7 @@
  *  \param str_text string to upper
  *  \return return 1 if success, 0 if string contain non alphabetique character
  */
-int upper(char* str_text);
+int upper(char str_text[]);
 
 /*!
  *  \fn char* createRotor(int int_gap)
