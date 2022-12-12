@@ -89,7 +89,22 @@ decalage (char* str_arg)
 int
 message(char* str_arg)
 {
-    return 0;
+    if( strcmp(str_arg, "-m") == 0){
+        return 0;
+    }
+
+    if( strcmp(str_arg, "-k") == 0){
+        return 0;
+    }
+
+    if( strcmp(str_arg, "-d") == 0){
+        return 0;
+    }
+
+    if( strcmp(str_arg, "--help") == 0){
+        return 0;
+    }
+    return 1;
 }
 
 /*!
@@ -102,7 +117,38 @@ message(char* str_arg)
  *  \return 
  */
 int
-parsingArgv(int int_argc, char** pstr_argv)
+parsingArgv(int argc, char** argv)
 {
-    return 0;
+    int i; //loop variable
+    int int_stop; //stop the process
+    int int_output; //check the output of parsing funct
+
+    int_stop = 1;
+    i = 1;
+    while ( i < argc && int_stop ){
+        if( argv[i][0] == '-'){
+            switch (argv[i][1])
+            {
+            case 'k':
+                if(i + 1 != argc){
+                    int_output = key(argv[i + 1]);
+                }
+                break;
+            case 'm':
+                if(i + 1 != argc){
+                    int_output = message(argv[i + 1]);
+                }
+                break;
+            case 'd':
+                if(i + 1 != argc){
+                    int_output = decalage(argv[i + 1]);
+                }
+                break;
+            default:
+                help();
+                int_stop = 0;
+                break;
+            }
+        }
+    }
 }
