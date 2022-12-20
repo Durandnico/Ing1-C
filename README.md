@@ -1,5 +1,5 @@
 # README
-## Premier exercice du TP 3 de programmation C
+## Project : Ing1-TP8-9 
 ### Table des matières
 1. [Compiler](#compiler)
 2. [Lancer l'exécutable](#exe)
