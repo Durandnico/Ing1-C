@@ -17,11 +17,11 @@ Cela créera aussi l'éxecutable.
 ***
 Pour lancer l'exécutable :
 ```sh
-./exe
+./bin/TP8-9
 ```
-#### Supprimer les fichiers en .exe, .o et la dox Doxygen
+#### Supprimer les dossiers bin (executable), obj (fichiers .o) et doc (DoxyFile)
 ***
-Pour supprimer les fichiers en .exe, .o et la doc Doxygen :
+Pour supprimer les dossiers bin (executable), obj (fichiers .o) et doc (DoxyFile) :
 ```sh
 make clean
 ```
