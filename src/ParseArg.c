@@ -17,7 +17,7 @@
  */
 
 //librairies
-#include "ParseArg.h"
+#include "../inc/ParseArg.h"
 
 /*!
  *  \fn void help(void)
@@ -62,7 +62,7 @@ methode(char* str_arg)
 }
 
 /*!
- *  \fn int decalage (char* str_arg)
+ *  \fn int IsANumber (char* str_arg)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Wed 07 December 2022 - 10:31:07
@@ -71,14 +71,14 @@ methode(char* str_arg)
  *  \return 
  */
 int
-decalage (char* str_arg)
+IsANumber (char* str_arg)
 {
     /*Return 0 if str_arg is NAN*/
     return atoi(str_arg) <= 0;
 }
 
 /*!
- *  \fn int message(char* str_arg)
+ *  \fn int IsAString(char* str_arg)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Wed 07 December 2022 - 10:30:57
@@ -87,24 +87,20 @@ decalage (char* str_arg)
  *  \return 
  */
 int
-message(char* str_arg)
+IsAString(char* str_arg)
 {
-    if( strcmp(str_arg, "-m") == 0){
-        return 0;
+    int bool_is_a_str; //bool to check if str_arg is a string
+    char *p; //loop variable
+
+    bool_is_a_str = 1;
+    
+    for(p = str_arg; *p; p++){
+        if ((*p < 'a' || *p > 'z') && (*p < 'A' || *p > 'Z')){
+            bool_is_a_str = 0;
+        }
     }
 
-    if( strcmp(str_arg, "-k") == 0){
-        return 0;
-    }
-
-    if( strcmp(str_arg, "-d") == 0){
-        return 0;
-    }
-
-    if( strcmp(str_arg, "--help") == 0){
-        return 0;
-    }
-    return 1;
+    return bool_is_a_str;
 }
 
 /*!
@@ -121,8 +117,8 @@ parsingArgv(int argc, char** argv)
 {
     int i; //loop variable
     int int_stop; //stop the process
-    int int_output; //check the output of parsing funct
-
+    int tint_output[4] = {0}; //Output of different parsing funct 
+    
     int_stop = 1;
     i = 1;
     while ( i < argc && int_stop ){
@@ -131,24 +127,48 @@ parsingArgv(int argc, char** argv)
             {
             case 'k':
                 if(i + 1 != argc){
-                    int_output = key(argv[i + 1]);
+                    tint_output[3] = IsAString(argv[i + 1]);
+                }
+                if(tint_output[3] == 1){
+                    i++;
                 }
                 break;
+
             case 'm':
                 if(i + 1 != argc){
-                    int_output = message(argv[i + 1]);
+                    tint_output[1] = 1;
+                }
+                if(tint_output[1] == 1){
+                    i++;
                 }
                 break;
+
             case 'd':
                 if(i + 1 != argc){
-                    int_output = decalage(argv[i + 1]);
+                    tint_output[2] = IsANumber(argv[i + 1]);
+                }
+                if(tint_output[2] == 1){
+                    i++;
                 }
                 break;
+
+            case 'c':
+                if(i + 1 != argc){
+                    tint_output[0] = methode(argv[i + 1]);
+                }
+                if(tint_output[0] == 0) {
+                    int_stop = 0;
+                }
+                i++;
+                break;
+
             default:
                 help();
                 int_stop = 0;
                 break;
             }
         }
+        i++;
     }
+    return 1;
 }

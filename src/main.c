@@ -38,6 +38,7 @@
  */
 int main (int argc, char** argv) {
 
+ 
     char tset[1028];
     strcpy(tset, "rendez vous demain soir a la tireuse");
 
