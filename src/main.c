@@ -18,7 +18,8 @@
 
 //librairies
 #include <stdio.h>
-#include "cryptage.h"
+#include "../inc/cryptage.h"
+#include "../inc/ParseArg.h"
 
 /*! 
  \def ERREUR
@@ -38,9 +39,11 @@
  */
 int main (int argc, char** argv) {
 
- 
+    mainProcess(argc, argv);
+    /*
     char tset[1028];
-    strcpy(tset, "rendez vous demain soir a la tireuse");
+    strcpy(tset, "ABCD");
+    //printf("%d\n", atoi(tset));
 
     //upper(tset);
     printf("\n%s", tset);
@@ -48,6 +51,6 @@ int main (int argc, char** argv) {
     //vigenere(tset, "ab");
     scytale(tset);
     printf("\n: %s\n", tset);
-
+    */
     return 0;
 }
