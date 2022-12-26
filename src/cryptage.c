@@ -35,8 +35,10 @@ int* createRotor(int int_gap) {
     for (i = 0; i < 128 ; i++){
         pint_rotor[i] = i;
 
-        if((i <= 'Z' && i >= 'A') || (i <= 'z' && i >= 'a')){
-            pint_rotor[i] += ((i + int_gap)%26 < int_gap)? 26 - int_gap : int_gap ;
+        if(i <= 'Z' && i >= 'A') {
+            pint_rotor[i] += ((i + int_gap) <= 'Z')? int_gap : int_gap - 26;
+        } else if (i <= 'z' && i >= 'a') {
+            pint_rotor[i] += ((i + int_gap) <= 'z')? int_gap : int_gap - 26;
         }
     }
     return pint_rotor;
