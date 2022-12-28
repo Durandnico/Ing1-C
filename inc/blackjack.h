@@ -1,4 +1,3 @@
-/*!
 /* **************************************************************************** */
 /*                                                                              */
 /*                                                       ::::::::  :::   :::    */
@@ -29,6 +28,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "../minilibx-linux/mlx.h"
 
 
@@ -112,6 +112,36 @@ typedef enum    s_cardname
 
 
 /*!
+ *  \struct t_img
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Mon 26 December 2022 - 21:11:20
+ *  \brief All data mandatory for an image in mlx
+ *  \param img              : pointeur to the img
+ *  \param addr             : pointeur to memory adress of the image
+ *  \param bits_per_pixel   : mandatory for mlx
+ *  \param line_length      : mandatory for mlx
+ *  \param endian           : mandatory for mlx
+ *  \param spricte_link     : link to the sprite to use
+ *  \param coord            : position of the img
+ *  \param width            : width of the image
+ *  \param height           ; height of the image
+ */
+typedef struct      s_img
+{
+    void        *img;
+    char	    *addr;
+	int		    bits_per_pixel;
+	int		    line_length;
+	int		    endian;
+    char        *sprite_link;
+    t_point     coord;
+    int         width;
+    int         height;
+}                   t_img;
+
+
+/*!
  *  \struct t_card
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
@@ -152,35 +182,6 @@ typedef struct      s_player
 }                   t_player;
 
 
-/*!
- *  \struct t_img
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Mon 26 December 2022 - 21:11:20
- *  \brief All data mandatory for an image in mlx
- *  \param img              : pointeur to the img
- *  \param addr             : pointeur to memory adress of the image
- *  \param bits_per_pixel   : mandatory for mlx
- *  \param line_length      : mandatory for mlx
- *  \param endian           : mandatory for mlx
- *  \param spricte_link     : link to the sprite to use
- *  \param coord            : position of the img
- *  \param width            : width of the image
- *  \param height           ; height of the image
- */
-typedef struct      s_img
-{
-    void        *img;
-    char	    *addr;
-	int		    bits_per_pixel;
-	int		    line_length;
-	int		    endian;
-    char        *sprite_link;
-    t_point     coord;
-    int         width;
-    int         height;
-}                   t_img;
-
 
 /*!
  *  \struct t_recup
@@ -213,10 +214,73 @@ typedef struct      s_recup
 /*----------                CARD.C                 ----------*/
 
 
+/*!
+ *  \fn t_card create_card(int int_value, t_flush color, t_cardname name)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Mon 26 December 2022 - 22:40:19
+ *  \brief create a card with given intels
+ *  \param color    : kind of the card
+ *  \param name     : name of the card (queen / king)
+ *  \return a card with given value
+ */
+t_card create_card(t_flush color, t_cardname name);
+
+/*!
+ *  \fn int rand_int(int int_target)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Mon 26 December 2022 - 22:58:46
+ *  \brief generate a random int between [[0:target]]
+ *  \param int_target max value to return
+ *  \return random int between 0 and targer
+ */
+int rand_int(int int_target);
+
+/*!
+ *  \fn t_card generate_random_card(void)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Mon 26 December 2022 - 22:54:13
+ *  \brief generate a random card (pick a card)
+ *  \param void
+ *  \return a random card
+ */
+t_card generate_random_card(void);
+
+/*!
+ *  \fn char* ccolor_to_string(t_card stru_card)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Tue 27 December 2022 - 23:55:03
+ *  \brief get the correct directory for the card
+ *  \param card     : card to get the color of
+ *  \return the color of the card in a string
+ */
+char* ccolor_to_string(t_card stru_card);
+
+/*!
+ *  \fn char* cname_to_string(t_card stru_card)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 00:18:15
+ *  \brief get the correct NAME.xpm for the card
+ *  \param card     : card to get the name of
+ *  \return the name of the card in a string
+ */
+char* cname_to_string(t_card stru_card);
 
 /*----------                INIT.C                 ----------*/
 
-
+/*!
+ *  \proc void init(t_recup recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Mon 26 December 2022 - 23:38:32
+ *  \brief 
+ *  \param recup init all
+ */
+void init(t_recup* recup);
 
 /*----------              KEY_DRAW.C               ----------*/
 
@@ -224,7 +288,17 @@ typedef struct      s_recup
 
 /*----------             MY_MLX_FUNC.C             ----------*/
 
-
+/*!
+ *  \fn int show_card(t_recup* recup, t_card* card)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Tue 27 December 2022 - 23:44:33
+ *  \brief show in the windows a card
+ *  \param recup    : pointeur to recup of all data for the window
+ *  \param card     : pointeur to a card
+ *  \return load and show the card in the screen (0 => fail, 1 => sucess)
+ */
+int show_card(t_recup* recup, t_card* card);
 
 /*----------              BLACKJACK.C              ----------*/
 
