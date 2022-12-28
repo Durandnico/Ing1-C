@@ -6,7 +6,7 @@
 /*   By: Durandnico <durandnico@cy-tech.fr>          +#+          +#++:         */
 /*                                                 +#+           +#+            */
 /*   Created: 26/12/2022 20:34:39 by Durandnico   #+#    #+#    #+#             */
-/*   Updated: 27/11/2022 23:58:14 by Durandnico   ########     ###              */
+/*   Updated: 28/11/2022 16:30:14 by Durandnico   ########     ###              */
 /*                                                                              */
 /* **************************************************************************** */
 
@@ -170,6 +170,7 @@ typedef struct      s_card
  *  \date Mon 26 December 2022 - 21:41:55
  *  \brief Data for a player
  *  \param token        : quantity of tokens the player has
+ *  \param card_in_hand : number of card the player has
  *  \param hand         : hand of the player
  *  \param total_value  : points of the player
  */
@@ -177,11 +178,27 @@ typedef struct      s_card
 typedef struct      s_player
 {
     int         token;
+    int         card_in_hand;
     t_card      *hand; 
     int         total_value;
 }                   t_player;
 
 
+/*!
+ *  \struct t_key
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 15:31:08
+ *  \brief 
+ *  \param alt  : bool, true if alt key is press
+ *  \param f4   : bool, true if f4 key is press
+ */
+
+typedef struct      s_key 
+{
+    int     alt;
+    int     f4;
+}                   t_key;
 
 /*!
  *  \struct t_recup
@@ -196,7 +213,8 @@ typedef struct      s_player
  *  \param state        : 0 == betting state | 1 == playing state   
  *  \param bet_img      : image of betting chips (betting phase)
  *  \param button       : image of the different button
- *  \param special      : if player can do special plays as double and split 
+ *  \param special      : if player can do special plays as double and split
+ *  \param datakey      : contain if key are press of not 
  */
 typedef struct      s_recup
 {
@@ -208,10 +226,10 @@ typedef struct      s_recup
     t_img       *bet_img;
     t_img       *button;
     int         special;
-
+    t_key       datakey;
 }                   t_recup;
 
-/*----------                CARD.C                 ----------*/
+/*--------------------                CARD.C                 --------------------*/
 
 
 /*!
@@ -270,7 +288,7 @@ char* ccolor_to_string(t_card stru_card);
  */
 char* cname_to_string(t_card stru_card);
 
-/*----------                INIT.C                 ----------*/
+/*--------------------                INIT.C                 --------------------*/
 
 /*!
  *  \proc void init(t_recup recup)
@@ -282,11 +300,11 @@ char* cname_to_string(t_card stru_card);
  */
 void init(t_recup* recup);
 
-/*----------              KEY_DRAW.C               ----------*/
+/*--------------------              KEY_DRAW.C               --------------------*/
 
 
 
-/*----------             MY_MLX_FUNC.C             ----------*/
+/*--------------------             MY_MLX_FUNC.C             --------------------*/
 
 /*!
  *  \fn int show_card(t_recup* recup, t_card* card)
@@ -299,6 +317,37 @@ void init(t_recup* recup);
  *  \return load and show the card in the screen (0 => fail, 1 => sucess)
  */
 int show_card(t_recup* recup, t_card* card);
+
+
+/*!
+ *  \proc void inti_button(t_recup* rcp_recup )
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Mon 26 December 2022 - 23:48:40
+ *  \brief init all button, ( load images, set coordà ready to summon
+ *  \param recup    : contain all data of the window
+ */
+void inti_button(t_recup* rcp_recup);
+
+/*!
+ *  \proc void init_key(t_recup* rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 15:40:07
+ *  \brief init all key to false (not press)
+ *  \param recup    : contain all data of the window
+ */
+void init_key(t_recup* rcp_recup);
+
+/*!
+ *  \proc void init_hook(t_recup* rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 16:01:13
+ *  \brief init all hook func
+ *  \param recup    : contain all data of the window
+ */
+void init_hook(t_recup* rcp_recup);
 
 /*----------              BLACKJACK.C              ----------*/
 

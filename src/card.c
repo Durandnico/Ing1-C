@@ -6,7 +6,7 @@
 /*   By: Durandnico <durandnico@cy-tech.fr>          +#+          +#++:         */
 /*                                                 +#+           +#+            */
 /*   Created: 26/12/2022 19:51:54 by Durandnico   #+#    #+#    #+#             */
-/*                                                ########     ###              */
+/*   Updated: 28/11/2022 16:30:14 by Durandnico   ########     ###              */
 /*                                                                              */
 /* **************************************************************************** */
 
@@ -53,7 +53,6 @@ t_card
 generate_random_card(void)
 {
     static int int_first = 1;
-    t_cardname stru_name;
 
     /*In case of first call*/
     if( int_first ){
@@ -61,8 +60,7 @@ generate_random_card(void)
         int_first = 0;
     }     
 
-    stru_name = rand_int(13);
-    return (create_card(NAMETOVALUE(stru_name), rand_int(3), stru_name));
+    return (create_card(rand_int(3), rand_int(13)));
 }
 
 

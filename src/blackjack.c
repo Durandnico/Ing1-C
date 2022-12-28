@@ -41,9 +41,9 @@ int main (int argc, char** argv) {
 
     init(&recup);
 
-    t_card test = create_card(10, DIAMOND, Q);
-    test.img.coord.x = 200;
-    test.img.coord.y = 200;
+    t_card test = create_card( CLUB, J);
+    test.img.coord.x = 600;
+    test.img.coord.y = 350;
     show_card(&recup, &test);
     mlx_loop(recup.mlx);
     return 0;
