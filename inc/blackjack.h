@@ -7,7 +7,7 @@
 /*   By: Durandnico <durandnico@cy-tech.fr>          +#+          +#++:         */
 /*                                                 +#+           +#+            */
 /*   Created: 26/12/2022 20:34:39 by Durandnico   #+#    #+#    #+#             */
-/*   Updated: None                                ########     ###              */
+/*   Updated: 27/11/2022 23:58:14 by Durandnico   ########     ###              */
 /*                                                                              */
 /* **************************************************************************** */
 
@@ -28,6 +28,7 @@
 // librairies
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "../minilibx-linux/mlx.h"
 
 
@@ -43,7 +44,7 @@
      *  \def WINDOW_HEIGHT
      *  \brief 
      */
-    #define WINDOW_HEIGHT 800
+    #define WINDOW_HEIGHT 720
     
     /*! 
      *  \def ALT
@@ -93,7 +94,7 @@ typedef struct      s_point
  */
 typedef enum    s_flush
 {
-     DIAMOND = 0, HEARTH, CLUB, SPADE
+     DIAMOND = 0, HEART, CLUB, SPADE
 }               t_flush;
 
 
@@ -129,7 +130,7 @@ typedef struct      s_card
     t_cardname      name;
     t_img           img;
     int             hide;
-}t_card;
+}                   t_card;
 
 
 /*!
@@ -164,6 +165,8 @@ typedef struct      s_player
  *  \param endian           : mandatory for mlx
  *  \param spricte_link     : link to the sprite to use
  *  \param coord            : position of the img
+ *  \param width            : width of the image
+ *  \param height           ; height of the image
  */
 typedef struct      s_img
 {
@@ -174,6 +177,8 @@ typedef struct      s_img
 	int		    endian;
     char        *sprite_link;
     t_point     coord;
+    int         width;
+    int         height;
 }                   t_img;
 
 
@@ -183,23 +188,26 @@ typedef struct      s_img
  *  \version 1.0
  *  \date Mon 26 December 2022 - 21:10:17
  *  \brief All data for the window
- *  \param mlx      : pointeur to the mlx
- *  \param win      : pointeur to the window of mlx
- *  \param cards    : cards on the board
- *  \param state    : 0 == betting state | 1 == playing state   
- *  \param bet_img  : image of betting chips (betting phase)
- *  \param button   : image of the different button
- *  \param special  : if player can do special plays as double and split 
+ *  \param mlx          : pointeur to the mlx
+ *  \param win          : pointeur to the window of mlx
+ *  \param ingame       : players in game (dealer include as [0])
+ *  \param background   : image of the board
+ *  \param state        : 0 == betting state | 1 == playing state   
+ *  \param bet_img      : image of betting chips (betting phase)
+ *  \param button       : image of the different button
+ *  \param special      : if player can do special plays as double and split 
  */
 typedef struct      s_recup
 {
-    void	*mlx;
-	void	*win;
-    t_card  *cards;
-    int     state;
-    t_img   *bet_img;
-    t_img   *button;
-    int     special;
+    void	    *mlx;
+	void	    *win;
+    t_player    *ingame;
+    t_img       background;
+    int         state;
+    t_img       *bet_img;
+    t_img       *button;
+    int         special;
+
 }                   t_recup;
 
 /*----------                CARD.C                 ----------*/

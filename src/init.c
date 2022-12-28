@@ -36,13 +36,13 @@ void
 init(t_recup *recup)
 {
     recup->mlx = mlx_init();
-    recup->win =mlx_new_window(recup.mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Blackjack !");
+    recup->win =mlx_new_window(recup->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Blackjack !");
 
     recup->state = 0;
     recup->special = 0;
 
-    recup->button = init_button();
-    recup->bet_img = init_bets();
+    //recup->button = init_button(recup);
+    //recup->bet_img = init_bets();
 }
 
 /*!
@@ -53,6 +53,12 @@ init(t_recup *recup)
  *  \brief 
  *  \param 
  */
-void inti_button(t_recup ) {
-     
+void inti_button(t_recup *recup) {
+    int i; //loop variable
+    
+    recup->button = malloc(4 * sizeof(t_img));
+
+    for( i = 0; i < 4 ; i++){
+        //recup->button[0] = mlx_xpm_file_to_image(recup->mlx, "")
+    }   
 }
