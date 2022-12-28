@@ -42,16 +42,7 @@ int next_frame(t_recup* recup) {
 }
 
 
-/*!
- *  \fn int show_card(t_recup* recup, t_card card)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Tue 27 December 2022 - 23:44:33
- *  \brief show in the windows a card
- *  \param recup    : pointeur to recup of all data for the window
- *  \param card     : pointeur to a card
- *  \return load and show the card in the screen (0 => fail, 1 => sucess)
- */
+
 int show_card(t_recup* rcp_recup, t_card* cd_card) {
 
     char img_dir[33];

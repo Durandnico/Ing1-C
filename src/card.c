@@ -23,21 +23,12 @@
 //librairies
 #include "../inc/blackjack.h"
 
-/*!
- *  \fn t_card create_card(int int_value, t_flush color, t_cardname name)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Mon 26 December 2022 - 22:40:19
- *  \brief 
- *  \param 
- *  \return 
- */
 t_card
-create_card(int int_value, t_flush color, t_cardname name)
+create_card(t_flush color, t_cardname name)
 {
     t_card res; //card to create
 
-    res.value = int_value;
+    res.value = NAMETOVALUE(name);
     res.color = color;
     res.name  = name;
 
@@ -45,15 +36,6 @@ create_card(int int_value, t_flush color, t_cardname name)
 }
 
 
-/*!
- *  \fn int rand_int(int int_target)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Mon 26 December 2022 - 22:58:46
- *  \brief generate a random int between [[0:target]]
- *  \param int_target max value to return
- *  \return random int  
- */
 int
 rand_int(int int_target)
 {     
@@ -66,15 +48,7 @@ rand_int(int int_target)
     return (int) (flt_tmp * ++int_target);
 }
 
-/*!
- *  \fn t_card generate_random_card(void)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Mon 26 December 2022 - 22:54:13
- *  \brief generate a random card (pick a card)
- *  \param void
- *  \return a random card
- */
+
 t_card
 generate_random_card(void)
 {
@@ -91,15 +65,7 @@ generate_random_card(void)
     return (create_card(NAMETOVALUE(stru_name), rand_int(3), stru_name));
 }
 
-/*!
- *  \fn char* ccolor_to_string(t_card stru_card)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Tue 27 December 2022 - 23:55:03
- *  \brief get the correct directory for the card
- *  \param card     : card to get the color of
- *  \return the color of the card in a string
- */
+
 char* ccolor_to_string(t_card stru_card) {
      
     /*No need to explain*/
@@ -130,15 +96,6 @@ char* ccolor_to_string(t_card stru_card) {
 }
 
 
-/*!
- *  \fn char* cname_to_string(t_card stru_card)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Wed 28 December 2022 - 00:18:15
- *  \brief 
- *  \param 
- *  \return 
- */
 char* cname_to_string(t_card stru_card) {
     
     /*No need to explain*/

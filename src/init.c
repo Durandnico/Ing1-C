@@ -41,6 +41,9 @@ init(t_recup *recup)
     recup->state = 0;
     recup->special = 0;
 
+    recup->background.img = mlx_xpm_file_to_image(recup->mlx, "texture/BJ_board.xpm", &recup->background.width, &recup->background.height);
+    recup->background.addr = mlx_get_data_addr(&recup->background, &recup->background.bits_per_pixel, &recup->background.line_length, &recup->background.endian);
+    mlx_put_image_to_window(recup->mlx, recup->win, recup->background.img, 0, 0);
     //recup->button = init_button(recup);
     //recup->bet_img = init_bets();
 }
