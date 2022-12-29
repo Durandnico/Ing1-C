@@ -6,7 +6,7 @@
 /*   By: Durandnico <durandnico@cy-tech.fr>          +#+          +#++:         */
 /*                                                 +#+           +#+            */
 /*   Created: 26/12/2022 19:51:54 by Durandnico   #+#    #+#    #+#             */
-/*   Updated: 28/11/2022 16:30:14 by Durandnico   ########     ###              */
+/*   Updated: 29/11/2022 06:14:14 by Durandnico   ########     ###              */
 /*                                                                              */
 /* **************************************************************************** */
 
@@ -24,13 +24,16 @@
 #include "../inc/blackjack.h"
 
 t_card
-create_card(t_flush color, t_cardname name)
+create_card(t_flush color, t_cardname name, int int_hide)
 {
     t_card res; //card to create
 
+    /*init all value*/
     res.value = NAMETOVALUE(name);
     res.color = color;
     res.name  = name;
+    res.hide = int_hide;
+
 
     return res;
 }
@@ -39,7 +42,7 @@ create_card(t_flush color, t_cardname name)
 int
 rand_int(int int_target)
 {     
-    float flt_tmp = (rand()/RAND_MAX);
+    float flt_tmp = (float) rand()/RAND_MAX;
 
     /*To make even the chance to get target*/
     if(flt_tmp == 1)
@@ -50,7 +53,7 @@ rand_int(int int_target)
 
 
 t_card
-generate_random_card(void)
+generate_random_card(int int_hide)
 {
     static int int_first = 1;
 
@@ -59,12 +62,14 @@ generate_random_card(void)
         srand(time(NULL));
         int_first = 0;
     }     
-
-    return (create_card(rand_int(3), rand_int(13)));
+    /* rand_int(12) + 1 cause value start at 1 and not 0*/
+    return create_card(rand_int(3), rand_int(12) + 1, int_hide);
 }
 
 
-char* ccolor_to_string(t_card stru_card) {
+char*
+ccolor_to_string(t_card stru_card)
+{
      
     /*No need to explain*/
     switch (stru_card.color)
@@ -86,7 +91,7 @@ char* ccolor_to_string(t_card stru_card) {
         break;
 
     default:
-        fprintf(stderr, "ERROR COLOR\n");
+        fprintf(stderr, "ERROR COLOR %d\n", stru_card.color);
         break;
     }
 
@@ -94,7 +99,9 @@ char* ccolor_to_string(t_card stru_card) {
 }
 
 
-char* cname_to_string(t_card stru_card) {
+char*
+cname_to_string(t_card stru_card)
+{
     
     /*No need to explain*/
     switch (stru_card.name)
@@ -139,9 +146,28 @@ char* cname_to_string(t_card stru_card) {
         return "king.xpm";
         break;
     default:
-        fprintf(stderr, "ERROR cname_to_string\n");
+        fprintf(stderr, "ERROR cname_to_string %d\n", stru_card.name);
         break;
     }
 
     return NULL;
+}
+
+
+void
+draw_card(t_player* ptr_pl_player, int int_hide)
+{   
+    /*malloc the first card*/
+    if(ptr_pl_player->card_in_hand == 0)
+        ptr_pl_player->hand = malloc(1 * sizeof(t_card));
+    
+    /*realloc to add a card*/
+    else
+       ptr_pl_player->hand = realloc(ptr_pl_player->hand, (ptr_pl_player->card_in_hand + 1) * sizeof(t_card));
+    
+    /*add a card to the player and set the coord*/
+    ptr_pl_player->hand[ptr_pl_player->card_in_hand] = generate_random_card(int_hide);
+    ptr_pl_player->hand[ptr_pl_player->card_in_hand].img.coord.x = ptr_pl_player->base_x + ptr_pl_player->card_in_hand * ptr_pl_player->dx;
+    ptr_pl_player->hand[ptr_pl_player->card_in_hand].img.coord.y = ptr_pl_player->base_y + ptr_pl_player->card_in_hand * ptr_pl_player->dy;
+    ptr_pl_player->card_in_hand++;  
 }

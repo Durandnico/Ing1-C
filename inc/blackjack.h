@@ -6,7 +6,7 @@
 /*   By: Durandnico <durandnico@cy-tech.fr>          +#+          +#++:         */
 /*                                                 +#+           +#+            */
 /*   Created: 26/12/2022 20:34:39 by Durandnico   #+#    #+#    #+#             */
-/*   Updated: 28/11/2022 16:30:14 by Durandnico   ########     ###              */
+/*   Updated: 28/11/2022 18:42:14 by Durandnico   ########     ###              */
 /*                                                                              */
 /* **************************************************************************** */
 
@@ -45,19 +45,21 @@
      *  \brief 
      */
     #define WINDOW_HEIGHT 720
+
+    /*! 
+     *  \def ENTER
+     *  \brief keycode of ENTER
+     */
+    #define ENTER 65293
     
-    /*! 
-     *  \def ALT
-     *  \brief keycode of ALT
-     */
-    #define ALT 1
 
     /*! 
-     *  \def F4
-     *  \brief keycode of F4
+     *  \def TOKEN_INIT
+     *  \brief number of token the player as at first
      */
-    #define F4 2
-
+    #define TOKEN_INIT 700
+    
+    
 /*----------                MACRO                  ----------*/
 
 /*! 
@@ -122,7 +124,6 @@ typedef enum    s_cardname
  *  \param bits_per_pixel   : mandatory for mlx
  *  \param line_length      : mandatory for mlx
  *  \param endian           : mandatory for mlx
- *  \param spricte_link     : link to the sprite to use
  *  \param coord            : position of the img
  *  \param width            : width of the image
  *  \param height           ; height of the image
@@ -134,7 +135,6 @@ typedef struct      s_img
 	int		    bits_per_pixel;
 	int		    line_length;
 	int		    endian;
-    char        *sprite_link;
     t_point     coord;
     int         width;
     int         height;
@@ -173,6 +173,10 @@ typedef struct      s_card
  *  \param card_in_hand : number of card the player has
  *  \param hand         : hand of the player
  *  \param total_value  : points of the player
+ *  \param base_x       : x value where the first card will spawn
+ *  \param base_y       : y value where the first card will spawn
+ *  \param dx           : gap x between 2 cards
+ *  \param dy           : gap y between 2 cards
  */
 
 typedef struct      s_player
@@ -181,6 +185,10 @@ typedef struct      s_player
     int         card_in_hand;
     t_card      *hand; 
     int         total_value;
+    int         base_x;
+    int         base_y;
+    int         dx;
+    int         dy;
 }                   t_player;
 
 
@@ -190,14 +198,12 @@ typedef struct      s_player
  *  \version 1.0
  *  \date Wed 28 December 2022 - 15:31:08
  *  \brief 
- *  \param alt  : bool, true if alt key is press
- *  \param f4   : bool, true if f4 key is press
+ *  \param enter    : bool, true if enter key is press
  */
 
 typedef struct      s_key 
 {
-    int     alt;
-    int     f4;
+    int     enter;
 }                   t_key;
 
 /*!
@@ -206,15 +212,16 @@ typedef struct      s_key
  *  \version 1.0
  *  \date Mon 26 December 2022 - 21:10:17
  *  \brief All data for the window
- *  \param mlx          : pointeur to the mlx
- *  \param win          : pointeur to the window of mlx
- *  \param ingame       : players in game (dealer include as [0])
- *  \param background   : image of the board
- *  \param state        : 0 == betting state | 1 == playing state   
- *  \param bet_img      : image of betting chips (betting phase)
- *  \param button       : image of the different button
- *  \param special      : if player can do special plays as double and split
- *  \param datakey      : contain if key are press of not 
+ *  \param mlx              : pointeur to the mlx
+ *  \param win              : pointeur to the window of mlx
+ *  \param ingame           : players in game (dealer include as [0])
+ *  \param background       : image of the board
+ *  \param bet_background   : image of the board with betting chips
+ *  \param state            : 0 == betting state | 1 == playing state | -1 == waiting state
+ *  \param button           : image of the different button
+ *  \param special          : if player can do special plays as double and split
+ *  \param datakey          : contain if key are press of not 
+ *  \param current_bet      : current bet of the player
  */
 typedef struct      s_recup
 {
@@ -222,12 +229,14 @@ typedef struct      s_recup
 	void	    *win;
     t_player    *ingame;
     t_img       background;
+    t_img       bet_background;
     int         state;
-    t_img       *bet_img;
     t_img       *button;
     int         special;
     t_key       datakey;
+    int         current_bet;
 }                   t_recup;
+
 
 /*--------------------                CARD.C                 --------------------*/
 
@@ -240,9 +249,10 @@ typedef struct      s_recup
  *  \brief create a card with given intels
  *  \param color    : kind of the card
  *  \param name     : name of the card (queen / king)
+ *  \param hdie     : if the card is hide or not
  *  \return a card with given value
  */
-t_card create_card(t_flush color, t_cardname name);
+t_card create_card(t_flush color, t_cardname name, int int_hide);
 
 /*!
  *  \fn int rand_int(int int_target)
@@ -261,10 +271,10 @@ int rand_int(int int_target);
  *  \version 1.0
  *  \date Mon 26 December 2022 - 22:54:13
  *  \brief generate a random card (pick a card)
- *  \param void
+ *  \param hide     : if the card will be show (== 0) or hide (==1)
  *  \return a random card
  */
-t_card generate_random_card(void);
+t_card generate_random_card(int int_hide);
 
 /*!
  *  \fn char* ccolor_to_string(t_card stru_card)
@@ -288,35 +298,31 @@ char* ccolor_to_string(t_card stru_card);
  */
 char* cname_to_string(t_card stru_card);
 
+
+/*!
+ *  \proc void draw_card(t_player* ptr_pl_player)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Thu 29 December 2022 - 04:02:35
+ *  \brief make the player hit a card
+ *  \param player   : pointeur to a player
+ *  \param hide     : if the card will be show (== 0) or hide (==1)
+ */
+void draw_card(t_player* ptr_pl_player, int int_hide);
+
+
 /*--------------------                INIT.C                 --------------------*/
+
 
 /*!
  *  \proc void init(t_recup recup)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Mon 26 December 2022 - 23:38:32
- *  \brief 
- *  \param recup init all
+ *  \brief loads images, create board, malloc players, init hook functs, (do a bunch of thing)  
+ *  \param recup    : contain all data of the window
  */
 void init(t_recup* recup);
-
-/*--------------------              KEY_DRAW.C               --------------------*/
-
-
-
-/*--------------------             MY_MLX_FUNC.C             --------------------*/
-
-/*!
- *  \fn int show_card(t_recup* recup, t_card* card)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Tue 27 December 2022 - 23:44:33
- *  \brief show in the windows a card
- *  \param recup    : pointeur to recup of all data for the window
- *  \param card     : pointeur to a card
- *  \return load and show the card in the screen (0 => fail, 1 => sucess)
- */
-int show_card(t_recup* recup, t_card* card);
 
 
 /*!
@@ -349,10 +355,127 @@ void init_key(t_recup* rcp_recup);
  */
 void init_hook(t_recup* rcp_recup);
 
+
+/*!
+ *  \proc void init_bets(t_recup* prcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 23:20:36
+ *  \brief init all chip button
+ *  \param recup    : pointeur to recup of all data for the window
+ */
+void init_bets_background(t_recup* prcp_recup);
+
+
+/*--------------------              KEY_DRAW.C               --------------------*/
+
+
+/*!
+ *  \fn int key_release(int int_keycode, t_recup* rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 15:37:12
+ *  \brief if a key is release, set it value to false
+ *  \param keycode      : code of the pressed key 
+ *  \param recup        : data for mlx
+ *  \return 0 mandatory fo mlx_hook
+ */
+int key_release(int int_keycode, t_recup* rcp_recup);
+
+/*!
+ *  \fn int key_press(int int_keycode, t_recup* rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 15:14:57
+ *  \brief if a key is press, set it value to true
+ *  \param keycode      : code of the pressed key 
+ *  \param recup        : data for mlx
+ *  \return 0 mandatory fo mlx_hook 
+ */
+int key_press(int int_keycode, t_recup* rcp_recup);
+
+/*!
+ *  \fn int mouse_press(int int_button, int int_x, int int_y, t_recup* rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 18:37:56
+ *  \brief 
+ *  \param button   : code of the pressed button
+ *  \param x        : x pos of the mouse
+ *  \param y        ; y pos of the mouse     
+ *  \param recup    : data for mlx
+ *  \return 0 mandatory fo mlx_hook 
+ */
+int mouse_press(int int_button, int int_x, int int_y, t_recup* rcp_recup);
+
+
+/*--------------------             MY_MLX_FUNC.C             --------------------*/
+
+
+/*!
+ *  \fn int next_frame(t_recup* recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Tue 27 December 2022 - 23:27:25
+ *  \brief how will be generate each frame
+ *  \param recup    : pointeur to recup of all data for the window
+ *  \return 0 mandatory fo mlx_hook 
+ */
+int next_frame(t_recup* recup);
+
+
+/*!
+ *  \fn int show_card(t_recup* recup, t_card* card)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Tue 27 December 2022 - 23:44:33
+ *  \brief show in the windows a card
+ *  \param recup    : pointeur to recup of all data for the window
+ *  \param card     : pointeur to a card
+ *  \return load and show the card in the screen (0 => fail, 1 => sucess)
+ */
+int show_card(t_recup* recup, t_card* card);
+
+
+/*!
+ *  \proc void drawn_sprite(t_recup* recup, t_img img)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Thu 29 December 2022 - 00:36:36
+ *  \brief draw pixel by pixel the sprite on the board (to make chips board transparent)
+ *  \param recup    : contain all data of the window
+ *  \param img      : image to copy on the background
+ */
+void drawn_sprite(t_recup* recup, t_img img);
+
+
 /*----------              BLACKJACK.C              ----------*/
 
+
+/*!
+ *  \fn int exit_prog(t_recup* rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Wed 28 December 2022 - 17:33:02
+ *  \brief exit the prog 
+ *  \return exit the program
+ */
+int exit_prog(void);
+
+/*!
+ *  \proc void state_switch(t_recup* prcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Thu 29 December 2022 - 03:51:36
+ *  \brief change from betting to playing state and vis-versa
+ *  \param recup    : all data for the window
+ */
+void state_switch(t_recup* prcp_recup);
 
 
 /*----------              BJ_BUTTON.C              ----------*/
 
+
+
+/*              END             */
 #endif
