@@ -43,43 +43,55 @@ state_switch(t_recup* prcp_recup)
     if(prcp_recup->state == 0) {
         prcp_recup->state = 1;
 
-        /*clear the window*/
-        mlx_clear_window(prcp_recup->mlx, prcp_recup->win);
-        
-        /*put the correct background*/
-        mlx_put_image_to_window(prcp_recup->mlx, prcp_recup->win, prcp_recup->background.img, 0, 0);
-
         /*draw cards*/
-        draw_card(&prcp_recup->ingame[1], 1);
-        draw_card(&prcp_recup->ingame[0], 1);
-        draw_card(&prcp_recup->ingame[1], 1);
+        draw_card(&prcp_recup->ingame[1], 0);
         draw_card(&prcp_recup->ingame[0], 0);
+        draw_card(&prcp_recup->ingame[1], 0);
+        draw_card(&prcp_recup->ingame[0], 1);
 
-        /*show cards*/
+        /*add card value to the score*/
         for( j = 0; j < 2; j++){
             for( i = 0; i < 2; i++){
-                show_card(prcp_recup, &prcp_recup->ingame[j].hand[i]);
-            }
+                prcp_recup->ingame[j].total_value += prcp_recup->ingame[j].hand[i].value;
+            }     
         }
 
-        /*show button HIT and STAY*/
-        //mlx_put_image_to_window(prcp_recup->mlx, prcp_recup->win, prcp_recup->button[0].img, prcp_recup->button[0].coord.x, prcp_recup->button[0].coord.y);
-        //mlx_put_image_to_window(prcp_recup->mlx, prcp_recup->win, prcp_recup->button[1].img, prcp_recup->button[1].coord.x, prcp_recup->button[1].coord.y);
+        /*the hiden card must not be count in tha dealer score*/
+        prcp_recup->ingame[0].total_value -= prcp_recup->ingame[0].hand[1].value;    
         
-        /*if card just been hit, show double button*/
-        if(prcp_recup->ingame[1].card_in_hand == 2){
-            //mlx_put_image_to_window(prcp_recup->mlx, prcp_recup->win, prcp_recup->button[2].img, prcp_recup->button[2].coord.x, prcp_recup->button[2].coord.y);    
-            
-            /*if splittable show split button*/
-            if(prcp_recup->ingame[1].hand[0].value == prcp_recup->ingame[1].hand[1].value){
-                //mlx_put_image_to_window(prcp_recup->mlx, prcp_recup->win, prcp_recup->button[3].img, prcp_recup->button[3].coord.x, prcp_recup->button[3].coord.y);
-            }
-        }   
+        /*show board, card, button, score*/
+        show_everything(prcp_recup);
     }
 
     /*else switch from playing to betting*/
     else{
 
+        /*checks who win*/
+        /*if win, give token*/
+        if(prcp_recup->ingame[0].total_value < prcp_recup->ingame[1].total_value){
+            prcp_recup->ingame[1].token += prcp_recup->current_bet;
+        }
+
+        /*if loose*/
+        else if(prcp_recup->ingame[0].total_value > prcp_recup->ingame[1].total_value){
+            prcp_recup->ingame[1].token -= prcp_recup->current_bet;
+        }
+
+        /*reset variable*/
+        prcp_recup->state = 0;
+        prcp_recup->current_bet = 0;
+
+
+        /*liberer les cartes*/
+        for( i = 0; i < 2; i++){
+            free(prcp_recup->ingame[i].hand);
+            prcp_recup->ingame[i].card_in_hand = 0;
+            prcp_recup->ingame[i].total_value = 0;
+        }
+
+
+        /*show betting state*/
+        show_betting(prcp_recup);
     }
 }
 

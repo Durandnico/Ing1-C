@@ -39,19 +39,6 @@ create_card(t_flush color, t_cardname name, int int_hide)
 }
 
 
-int
-rand_int(int int_target)
-{     
-    float flt_tmp = (float) rand()/RAND_MAX;
-
-    /*To make even the chance to get target*/
-    if(flt_tmp == 1)
-        flt_tmp -= 0.01;
-    
-    return (int) (flt_tmp * ++int_target);
-}
-
-
 t_card
 generate_random_card(int int_hide)
 {

@@ -6,7 +6,7 @@
 /*   By: Durandnico <durandnico@cy-tech.fr>          +#+          +#++:         */
 /*                                                 +#+           +#+            */
 /*   Created: 26/12/2022 20:34:39 by Durandnico   #+#    #+#    #+#             */
-/*   Updated: 28/11/2022 18:42:14 by Durandnico   ########     ###              */
+/*   Updated: 30/11/2022 06:41:05 by Durandnico   ########     ###              */
 /*                                                                              */
 /* **************************************************************************** */
 
@@ -66,7 +66,7 @@
  *  \def NAMETOVALUE
  *  \brief 
  */
-#define NAMETOVALUE(a) (a > 10) ? 10: a
+#define NAMETOVALUE(a) (a > 10) ? 10: (a == 1) ? 11 : a
 
 
 /*----------          STRUCTURES & ENUMS           ----------*/
@@ -177,6 +177,7 @@ typedef struct      s_card
  *  \param base_y       : y value where the first card will spawn
  *  \param dx           : gap x between 2 cards
  *  \param dy           : gap y between 2 cards
+ *  \param
  */
 
 typedef struct      s_player
@@ -189,6 +190,7 @@ typedef struct      s_player
     int         base_y;
     int         dx;
     int         dy;
+    t_img       score;
 }                   t_player;
 
 
@@ -219,7 +221,8 @@ typedef struct      s_key
  *  \param bet_background   : image of the board with betting chips
  *  \param state            : 0 == betting state | 1 == playing state | -1 == waiting state
  *  \param button           : image of the different button
- *  \param special          : if player can do special plays as double and split
+ *  \param x2               : if player can do a double
+ *  \param split            : if player can do a split
  *  \param datakey          : contain if key are press of not 
  *  \param current_bet      : current bet of the player
  */
@@ -232,7 +235,8 @@ typedef struct      s_recup
     t_img       bet_background;
     int         state;
     t_img       *button;
-    int         special;
+    int         x2;
+    int         split;
     t_key       datakey;
     int         current_bet;
 }                   t_recup;
@@ -254,16 +258,6 @@ typedef struct      s_recup
  */
 t_card create_card(t_flush color, t_cardname name, int int_hide);
 
-/*!
- *  \fn int rand_int(int int_target)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Mon 26 December 2022 - 22:58:46
- *  \brief generate a random int between [[0:target]]
- *  \param int_target max value to return
- *  \return random int between 0 and targer
- */
-int rand_int(int int_target);
 
 /*!
  *  \fn t_card generate_random_card(void)
@@ -333,7 +327,7 @@ void init(t_recup* recup);
  *  \brief init all button, ( load images, set coordà ready to summon
  *  \param recup    : contain all data of the window
  */
-void inti_button(t_recup* rcp_recup);
+void init_button(t_recup* rcp_recup);
 
 /*!
  *  \proc void init_key(t_recup* rcp_recup)
@@ -365,6 +359,17 @@ void init_hook(t_recup* rcp_recup);
  *  \param recup    : pointeur to recup of all data for the window
  */
 void init_bets_background(t_recup* prcp_recup);
+
+
+/*!
+ *  \proc void init_bet_money_score(t_recup* ptr_rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Fri 30 December 2022 - 02:37:53
+ *  \brief draw the money square on both background and draw score zone on background
+ *  \param ptr_rcp_recup    : all data of the window 
+ */
+void init_bet_money_score(t_recup* ptr_rcp_recup);
 
 
 /*--------------------              KEY_DRAW.C               --------------------*/
@@ -413,18 +418,6 @@ int mouse_press(int int_button, int int_x, int int_y, t_recup* rcp_recup);
 
 
 /*!
- *  \fn int next_frame(t_recup* recup)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Tue 27 December 2022 - 23:27:25
- *  \brief how will be generate each frame
- *  \param recup    : pointeur to recup of all data for the window
- *  \return 0 mandatory fo mlx_hook 
- */
-int next_frame(t_recup* recup);
-
-
-/*!
  *  \fn int show_card(t_recup* recup, t_card* card)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
@@ -443,10 +436,58 @@ int show_card(t_recup* recup, t_card* card);
  *  \version 1.0
  *  \date Thu 29 December 2022 - 00:36:36
  *  \brief draw pixel by pixel the sprite on the board (to make chips board transparent)
- *  \param recup    : contain all data of the window
- *  \param img      : image to copy on the background
+ *  \param ptr_img_base     : base image
+ *  \param img_to_add       : image to copy on the other one
+ *  \param x                : x pos where to draw the sprite
+ *  \param y                : y pos where to draw the sprite
  */
-void drawn_sprite(t_recup* recup, t_img img);
+void drawn_sprite(t_img* ptr_img_base, t_img img_to_add, int int_x, int int_y);
+
+
+/*!
+ *  \proc void show_everything(t_recup* ptr_rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Thu 29 December 2022 - 23:29:23
+ *  \brief update the window for playing
+ *  \param ptr_recup    : all data for the window
+ */
+void show_everything(t_recup* ptr_rcp_recup);
+
+
+/*!
+ *  \proc void show_betting(t_recup* ptr_rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Fri 30 December 2022 - 04:03:50
+ *  \brief refresh the betting window
+ *  \param ptr_rcp_recup    : all the data for the window
+ */
+void show_betting(t_recup* ptr_rcp_recup);
+
+
+/*!
+ *  \proc void show_score(t_recup* ptr_rcp_recup, t_player* ptr_pl_player)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Thu 29 December 2022 - 19:52:58
+ *  \brief print score of the player
+ *  \param ptr_recup    : all the data for the window
+ *  \param ptr_player   : pointeur to a player 
+ */
+void show_score(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
+
+
+/*!
+ *  \proc void show_bet_wallet(t_recup* ptr_rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Fri 30 December 2022 - 03:52:51
+ *  \brief print wallet and current bet of the player
+ *  \param ptr_recup    : all the data for the window
+ *  \param player       : main player 
+ */
+void show_bet_wallet(t_recup* ptr_rcp_recup, t_player ptr_player);
 
 
 /*----------              BLACKJACK.C              ----------*/
@@ -476,6 +517,79 @@ void state_switch(t_recup* prcp_recup);
 /*----------              BJ_BUTTON.C              ----------*/
 
 
+/*!
+ *  \proc void hit(t_recup* ptr_rcp_recup, t_player* ptr_pl_player)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Thu 29 December 2022 - 18:54:20
+ *  \brief hit a card for a player
+ *  \param recup    : all data dor the window
+ *  \param player   : pointeur to a player 
+ */
+void hit(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
+
+
+/*!
+ *  \proc void calc_score(t_recup* ptr_rcp_recup, t_player* ptr_pl_player)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Thu 29 December 2022 - 19:15:39
+ *  \brief check score and update the window 
+ *  \param recup    : all data dor the window
+ *  \param player   : pointeur to a player 
+ */
+void calc_score(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
+
+
+/*!
+ *  \proc void double_hit(t_recup* ptr_rcp_recup, t_player* ptr_pl_player)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Fri 30 December 2022 - 05:01:47
+ *  \brief make a double !
+ *  \param recup    : all data dor the window
+ *  \param player   : pointeur to a player 
+ */
+void double_hit(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
+
+
+/*!
+ *  \proc void stay(t_recup* ptr_rcp_recup, int int_cas)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Fri 30 December 2022 - 05:16:56
+ *  \brief change the turn to the dealer
+ *  \param ptr_rcp_recup    : all data dor the window
+ *  \param int_cas          : type de stay (0 : classic, 1 : blackJack / overpass 21)
+ */
+void stay(t_recup* ptr_rcp_recup, int int_cas);
+
 
 /*              END             */
+
+
+/*!
+ *  \fn int rand_int(int int_target)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Mon 26 December 2022 - 22:58:46
+ *  \brief generate a random int between [[0:target]]
+ *  \param int_target max value to return
+ *  \return random int between 0 and targer
+ */
+int rand_int(int int_target);
+
+
+/*!
+ *  \fn char* itoa(int int_value)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Fri 30 December 2022 - 00:16:04
+ *  \brief transform int to string
+ *  \param int_value    : int to transform in char
+ *  \return char*
+ */
+char* itoa(int int_value);
+
+
 #endif
