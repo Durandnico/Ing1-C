@@ -24,7 +24,16 @@
 void
 help(void)
 {
-    printf("HELP FOR DA PROG");
+    printf("Usage: ./bin/TP8 [OPTION]...\n");
+    printf("\nList of option.\n");
+    printf("    -c              which cryptage you want to use\n");
+    printf("                    possibilities :\n");
+    printf("                    cesar, vigenere, scytale \n");
+    printf("\nOther option.\n");
+    printf("    -d              Decalage for cesar cryptage\n");
+    printf("    -k              key for  vigenere  cryptage\n");
+    printf("                    /!\\Cannot use both -d -k at the same time\n\n");
+    printf("    -m              message to crypt\n");
 }
 
 
@@ -147,7 +156,6 @@ parsingArgv(int argc, char** argv)
         }
         i++;
     }
-    printf("%d %d %d %d\n", pint_output[0], pint_output[1], pint_output[2], pint_output[3]);
     
     if( !int_stop )
         return NULL;
@@ -162,6 +170,7 @@ int mainProcess(int argc, char** argv) {
     char* str_key; //output of -k
     int int_decalage; //output of -d
     char str_msg[2048]; //output of -m
+    int int_cscanf; //check output of scnafs
 
     pint_output = parsingArgv(argc, argv);
     if(pint_output == NULL){
@@ -184,7 +193,11 @@ int mainProcess(int argc, char** argv) {
     /*Check for message*/
     if( pint_output [1] == 0 ){
         printf("Please enter the message to crypt : ");
-        scanf("%[^\n]", str_msg);
+        int_cscanf = scanf("%[^\n]", str_msg);
+        if(int_cscanf == 0){
+            fprintf(stderr, "Erreur dans l'entré du scanf");
+            exit(1);
+        }
         fgetc(stdin);
     }
     else{
@@ -195,7 +208,11 @@ int mainProcess(int argc, char** argv) {
     if( pint_output[0] == 1 ){
         if( pint_output[2] == 0 ){
             printf("\nPlease enter the decalage (int): ");
-            scanf("%d", &int_decalage);
+            int_cscanf = scanf("%d", &int_decalage);
+            if(int_cscanf == 0){
+                fprintf(stderr, "Erreur dans l'entré du scanf");
+                exit(1);
+            }
         } else {
             int_decalage = atoi(argv[pint_output[2]]);
         }
@@ -208,7 +225,11 @@ int mainProcess(int argc, char** argv) {
         if( pint_output[3] == 0 ){
             str_key = malloc(sizeof(char*));
             printf("\nPlease enter the key for vigenere (string): ");
-            scanf("%s", str_key);
+            int_cscanf = scanf("%s", str_key);
+            if(int_cscanf == 0){
+                fprintf(stderr, "Erreur dans l'entré du scanf");
+                exit(1);
+            }
         } else {
             str_key = argv[pint_output[3]];
         }

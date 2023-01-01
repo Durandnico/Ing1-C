@@ -1,6 +1,6 @@
 SRC = $(wildcard src/*.c)
 
-NAME = TP8-9
+NAME = TP8
 
 CC = gcc
 

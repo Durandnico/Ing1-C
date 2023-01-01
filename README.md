@@ -1,5 +1,5 @@
 # README
-## Project : Ing1-TP8-9 
+## Project : Ing1-TP8
 ### Table des matières
 1. [Compiler](#compiler)
 2. [Lancer l'exécutable](#exe)
