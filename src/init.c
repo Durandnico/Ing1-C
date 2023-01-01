@@ -26,75 +26,72 @@
 
 
 void
-init(t_recup *recup)
+init(t_recup *ptr_rcp_recup)
 {   
     int i; //loop variable
 
     /*create the main window*/
-    recup->mlx = mlx_init();
-    recup->win =mlx_new_window(recup->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Blackjack !");
+    ptr_rcp_recup->mlx = mlx_init();
+    ptr_rcp_recup->win =mlx_new_window(ptr_rcp_recup->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Blackjack !");
 
     /*init state to false*/
-    recup->state = 0;
-    recup->x2 = 0;
-    recup->split = 0;
-    recup->current_bet = 0;
+    ptr_rcp_recup->state = 0;
+    ptr_rcp_recup->x2 = 0;
+    ptr_rcp_recup->split = 0;
+    ptr_rcp_recup->current_bet = 0;
 
     /*load background image*/
-    recup->background.img = mlx_xpm_file_to_image(recup->mlx, "texture/BJ_board.xpm", &recup->background.width, &recup->background.height);
-    recup->background.addr = mlx_get_data_addr(recup->background.img, &recup->background.bits_per_pixel, &recup->background.line_length, &recup->background.endian);
+    ptr_rcp_recup->background.img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/BJ_board.xpm", &ptr_rcp_recup->background.width, &ptr_rcp_recup->background.height);
+    ptr_rcp_recup->background.addr = mlx_get_data_addr(ptr_rcp_recup->background.img, &ptr_rcp_recup->background.bits_per_pixel, &ptr_rcp_recup->background.line_length, &ptr_rcp_recup->background.endian);
    
     /*load bet_backgroune images */
-    recup->bet_background.img = mlx_xpm_file_to_image(recup->mlx, "texture/BJ_board.xpm", &recup->bet_background.width, &recup->bet_background.height);
-    recup->bet_background.addr = mlx_get_data_addr(recup->bet_background.img, &recup->bet_background.bits_per_pixel, &recup->bet_background.line_length, &recup->bet_background.endian);
+    ptr_rcp_recup->bet_background.img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/BJ_board.xpm", &ptr_rcp_recup->bet_background.width, &ptr_rcp_recup->bet_background.height);
+    ptr_rcp_recup->bet_background.addr = mlx_get_data_addr(ptr_rcp_recup->bet_background.img, &ptr_rcp_recup->bet_background.bits_per_pixel, &ptr_rcp_recup->bet_background.line_length, &ptr_rcp_recup->bet_background.endian);
     
     /*draw money's rectangle*/
-    init_bet_money_score(recup);
+    init_bet_money_score(ptr_rcp_recup);
 
     /*load all button images*/
-    init_button(recup);
+    init_button(ptr_rcp_recup);
 
     /*load all bets images*/
-    init_bets_background(recup);
-
-    /*set all key to not press*/
-    init_key(recup);
+    init_bets_background(ptr_rcp_recup);
 
     /*create all hook func*/
-    init_hook(recup);
+    init_hook(ptr_rcp_recup);
 
     /*malloc dealer and player*/
-    recup->ingame = malloc( 2 * sizeof(t_player));
+    ptr_rcp_recup->ingame = malloc( 2 * sizeof(t_player));
 
     /*init dealer and player*/
     for(i = 0; i < 2; i++){
-        recup->ingame[i].card_in_hand = 0;
-        recup->ingame[i].hand = NULL;
-        recup->ingame[i].token = -1;
-        recup->ingame[i].total_value = 0;
-        recup->ingame[i].base_x = 575;
-        recup->ingame[i].dx = 40;
-        recup->ingame[i].dy = 40;
-        recup->ingame[i].score.coord.x = 555;
+        ptr_rcp_recup->ingame[i].card_in_hand = 0;
+        ptr_rcp_recup->ingame[i].hand = NULL;
+        ptr_rcp_recup->ingame[i].token = -1;
+        ptr_rcp_recup->ingame[i].total_value = 0;
+        ptr_rcp_recup->ingame[i].base_x = 575;
+        ptr_rcp_recup->ingame[i].dx = 40;
+        ptr_rcp_recup->ingame[i].dy = 40;
+        ptr_rcp_recup->ingame[i].score.coord.x = 555;
     }
     
     /*set player tokens to TOKEN_INIT*/
-    recup->ingame[1].token = TOKEN_INIT;
+    ptr_rcp_recup->ingame[1].token = TOKEN_INIT;
 
     /*set base_pos*/
-    recup->ingame[0].base_y = 75;
-    recup->ingame[1].base_y = 475;
-    recup->ingame[1].dy *= -1;
-    recup->ingame[0].dx *= -1;
-    recup->ingame[0].score.coord.x -= 30;
-    recup->ingame[0].score.coord.y = -8;
-    recup->ingame[1].score.coord.y = 475 + 145 + 5;
+    ptr_rcp_recup->ingame[0].base_y = 75;
+    ptr_rcp_recup->ingame[1].base_y = 475;
+    ptr_rcp_recup->ingame[1].dy *= -1;
+    ptr_rcp_recup->ingame[0].dx *= -1;
+    ptr_rcp_recup->ingame[0].score.coord.x -= 30;
+    ptr_rcp_recup->ingame[0].score.coord.y = -8;
+    ptr_rcp_recup->ingame[1].score.coord.y = 475 + 145 + 5;
     
     /*betting state*/
-    mlx_put_image_to_window(recup->mlx, recup->win, recup->bet_background.img, 0, 0);
+    mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_rcp_recup->bet_background.img, 0, 0);
 
     /*show wallet and bet*/
-    show_bet_wallet(recup, recup->ingame[1]);
+    show_bet_wallet(ptr_rcp_recup, ptr_rcp_recup->ingame[1]);
 }
 
 
@@ -110,15 +107,17 @@ init_button(t_recup* ptr_rcp_recup)
     int_y = (WINDOW_HEIGHT / 9);
     int_dy = 2 * int_y;
     int_x = WINDOW_WIDTH - 125 - 169;
-    ptr_rcp_recup->button = malloc(4 * sizeof(t_img));
+    ptr_rcp_recup->button = malloc(6 * sizeof(t_img));
     
     /*load all images*/
     ptr_rcp_recup->button[0].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/X2.xpm", &ptr_rcp_recup->button[0].width, &ptr_rcp_recup->button[0].height);
     ptr_rcp_recup->button[1].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/HIT.xpm", &ptr_rcp_recup->button[1].width, &ptr_rcp_recup->button[1].height);
     ptr_rcp_recup->button[2].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/STAY.xpm", &ptr_rcp_recup->button[2].width, &ptr_rcp_recup->button[2].height);
     ptr_rcp_recup->button[3].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/SPLIT.xpm", &ptr_rcp_recup->button[3].width, &ptr_rcp_recup->button[3].height);
-    
-    for( i = 0; i < 4; i++){
+    ptr_rcp_recup->button[4].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/HIT.xpm", &ptr_rcp_recup->button[4].width, &ptr_rcp_recup->button[4].height);
+    ptr_rcp_recup->button[5].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/SPLIT.xpm", &ptr_rcp_recup->button[5].width, &ptr_rcp_recup->button[5].height);
+
+    for( i = 0; i < 5; i++){
         /*get data.*/
         ptr_rcp_recup->button[i].addr = mlx_get_data_addr(ptr_rcp_recup->button[i].img, &ptr_rcp_recup->button[i].bits_per_pixel, &ptr_rcp_recup->button[i].line_length, &ptr_rcp_recup->button[i].endian);
 
@@ -128,10 +127,15 @@ init_button(t_recup* ptr_rcp_recup)
 
         int_y += int_dy;
     }
+
+    ptr_rcp_recup->button[4].coord.x = 550;
+    ptr_rcp_recup->button[4].coord.y = 525;
+    ptr_rcp_recup->button[5].coord.x = 10;
+    ptr_rcp_recup->button[5].coord.y = 400;
 }
 
 
-void init_bets_background(t_recup* prcp_recup) {
+void init_bets_background(t_recup* ptr_rcp_recup) {
     int i; //loop variable
     int int_x; //to affect x value
     t_img bet_img[7];
@@ -141,13 +145,13 @@ void init_bets_background(t_recup* prcp_recup) {
     
     
     /*It's horrible but have to change each file_name so...*/
-    bet_img[0].img = mlx_xpm_file_to_image(prcp_recup->mlx, "texture/chip1.xpm", &bet_img[0].width, &bet_img[0].height);
-    bet_img[1].img = mlx_xpm_file_to_image(prcp_recup->mlx, "texture/chip2.xpm", &bet_img[1].width, &bet_img[1].height);
-    bet_img[2].img = mlx_xpm_file_to_image(prcp_recup->mlx, "texture/chip5.xpm", &bet_img[2].width, &bet_img[2].height);
-    bet_img[3].img = mlx_xpm_file_to_image(prcp_recup->mlx, "texture/chip10.xpm", &bet_img[3].width, &bet_img[3].height);
-    bet_img[4].img = mlx_xpm_file_to_image(prcp_recup->mlx, "texture/chip25.xpm", &bet_img[4].width, &bet_img[4].height);
-    bet_img[5].img = mlx_xpm_file_to_image(prcp_recup->mlx, "texture/chip100.xpm", &bet_img[5].width, &bet_img[5].height);
-    bet_img[6].img = mlx_xpm_file_to_image(prcp_recup->mlx, "texture/chip500.xpm", &bet_img[6].width, &bet_img[6].height);
+    bet_img[0].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/chip1.xpm", &bet_img[0].width, &bet_img[0].height);
+    bet_img[1].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/chip2.xpm", &bet_img[1].width, &bet_img[1].height);
+    bet_img[2].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/chip5.xpm", &bet_img[2].width, &bet_img[2].height);
+    bet_img[3].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/chip10.xpm", &bet_img[3].width, &bet_img[3].height);
+    bet_img[4].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/chip25.xpm", &bet_img[4].width, &bet_img[4].height);
+    bet_img[5].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/chip100.xpm", &bet_img[5].width, &bet_img[5].height);
+    bet_img[6].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/chip500.xpm", &bet_img[6].width, &bet_img[6].height);
 
     /*set all other value*/
     for( i = 0; i < 7; i++){
@@ -162,33 +166,25 @@ void init_bets_background(t_recup* prcp_recup) {
         int_x += 154;
 
         /*print it on the bet_background*/
-        drawn_sprite(&prcp_recup->bet_background, bet_img[i], bet_img[i].coord.x, bet_img[i].coord.y);
+        drawn_sprite(&ptr_rcp_recup->bet_background, bet_img[i], bet_img[i].coord.x, bet_img[i].coord.y);
     }
 }
 
 
 void
-init_key(t_recup* rcp_recup) 
-{
-    /*Set all data key to 0 (false)*/
-    rcp_recup->datakey.enter = 0;    
-}
-
-
-void
-init_hook(t_recup* rcp_recup)
+init_hook(t_recup* ptr_rcp_recup)
 {
     /*key press*/
-    mlx_hook(rcp_recup->win, 2, 1L<<0,  key_press, rcp_recup);    
+    //mlx_hook(ptr_rcp_recup->win, 2, 1L<<0,  key_press, ptr_rcp_recup);    
 
     /*key release*/
-    mlx_hook(rcp_recup->win, 3, 1L<<1,  key_release, rcp_recup);    
+    //mlx_hook(ptr_rcp_recup->win, 3, 1L<<1,  key_release, ptr_rcp_recup);    
 
     /*red cross to exit*/
-    mlx_hook(rcp_recup->win, 17, 0L, exit_prog, 0);
+    mlx_hook(ptr_rcp_recup->win, 17, 0L, exit_prog, 0);
 
     /*mouse click*/
-    mlx_hook(rcp_recup->win, 4, 1L<<2, mouse_press, rcp_recup);
+    mlx_hook(ptr_rcp_recup->win, 4, 1L<<2, mouse_press, ptr_rcp_recup);
 }
 
 

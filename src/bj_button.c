@@ -16,7 +16,7 @@
  *  \version 1.0
  *  \date Thu 29 December 2022 - 18:53:52
  *
- *  \brief 
+ *  \brief function for the button of the blackjack (hit / double / stay)
  *
  *
  */
@@ -122,5 +122,7 @@ void stay(t_recup* ptr_rcp_recup, int int_cas) {
     /*show dealers card*/
     show_everything(ptr_rcp_recup);    
 
-    state_switch(ptr_rcp_recup);
+    /*next button*/
+    mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_rcp_recup->button[5].img, ptr_rcp_recup->button[5].coord.x, ptr_rcp_recup->button[5].coord.y);
+    
 }

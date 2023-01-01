@@ -16,7 +16,7 @@
  *  \version 1.0
  *  \date Wed 28 December 2022 - 15:14:12
  *
- *  \brief 
+ *  \brief function for the traitment of user's inputs
  *
  *
  */
@@ -24,106 +24,68 @@
 //librairies
 #include "../inc/blackjack.h"
 
-
-int key_press(int int_keycode, t_recup* prcp_recup) {
-     
-    switch (int_keycode)
-    {
-    case ENTER:
-        if (prcp_recup->current_bet != 0 && prcp_recup->datakey.enter == 0 && prcp_recup->state == 0){
-            prcp_recup->datakey.enter = 1;
-            state_switch(prcp_recup);
-        }
-
-        break;
-    default:
-        /*No use of this key*/
-        break;
-    }
-
-    return 1;
-}
-
-
-int key_release(int int_keycode, t_recup* rcp_recup) {
-     
-     switch (int_keycode)
-    {
-        case ENTER:
-            rcp_recup->datakey.enter = 0;
-            break;
-
-        default:
-            /*No use of this key*/
-            break;
-    }
-
-    return 0;
-}
-
-
 int
 mouse_press(int int_button, int int_x, int int_y, t_recup* ptr_rcp_recup)
 {   
     int             int_dy; //to store a little calcul
     static int      sint_change_button = 0;  //if the change button is clickable
-    
+
     /*If betting state*/
-    if(int_button && ptr_rcp_recup->state == 0){
+    if(ptr_rcp_recup->state == 0){
+        
+        if(int_button == LEFT_CLICK && sint_change_button && int_y >= 525 && int_y <= 697 && int_x >= 550 && int_x <= 719){
+            state_switch(ptr_rcp_recup);
+            sint_change_button = 0;
+            return 0;
+        }
+        
         if (int_y <= 350 && int_y >= 0)
         {
             /*1 chip*/
             if (int_x >= 101 && int_x <= 251){
-                ptr_rcp_recup->current_bet += 1;
-                sint_change_button = 1;
+                ptr_rcp_recup->current_bet += (int_button == LEFT_CLICK) ? 1 : -1;
             }
 
             /*2 chip*/
             else if (int_x >= 255 && int_x <= 405){
-                ptr_rcp_recup->current_bet += 2;
-                sint_change_button = 1;
+                ptr_rcp_recup->current_bet += (int_button == LEFT_CLICK) ? 2 : -2;
             }
 
             /*5 chips*/
             else if (int_x >= 409 && int_x <= 559){
-                ptr_rcp_recup->current_bet += 5;
-                sint_change_button = 1;
+                ptr_rcp_recup->current_bet += (int_button == LEFT_CLICK) ? 5 : -5;
             }
 
             /*10 chip*/
             else if (int_x >= 563 && int_x <= 713){
-                ptr_rcp_recup->current_bet += 10;
-                sint_change_button = 1;
+                ptr_rcp_recup->current_bet += (int_button == LEFT_CLICK) ? 10 : -10;
             }
 
             /*25 chips*/
             else if (int_x >= 717 && int_x <= 867){
-                ptr_rcp_recup->current_bet += 25;
-                sint_change_button = 1;
+                ptr_rcp_recup->current_bet += (int_button == LEFT_CLICK) ? 25 : -25;
             }
 
             /*100 chip*/
             else if (int_x >= 871 && int_x <= 1025){
-                ptr_rcp_recup->current_bet += 100;
-                sint_change_button = 1;
+                ptr_rcp_recup->current_bet += (int_button == LEFT_CLICK) ? 100 : -100;
             } 
 
             /*500 chip*/
             else if (int_x >= 1029 && int_x <= 1179){
-                ptr_rcp_recup->current_bet += 500;
-                sint_change_button = 1;
+                ptr_rcp_recup->current_bet += (int_button == LEFT_CLICK) ? 500 : -500;
             }
 
-            else if( sint_change_button ){
-                printf("ngro");
-                sint_change_button = 0;
-                state_switch(ptr_rcp_recup);
-                return 0;
+            if( !sint_change_button && ptr_rcp_recup->current_bet != 0){
+                sint_change_button = 1;
             }
         }
 
         if(ptr_rcp_recup->current_bet > ptr_rcp_recup->ingame[1].token)
             ptr_rcp_recup->current_bet = ptr_rcp_recup->ingame[1].token;
+
+        if(ptr_rcp_recup->current_bet < 0)
+            ptr_rcp_recup->current_bet = 0;
 
         show_betting(ptr_rcp_recup);
     }
@@ -157,5 +119,10 @@ mouse_press(int int_button, int int_x, int int_y, t_recup* ptr_rcp_recup)
         }
     }
     
+    /*waiting to reload match*/
+    else if(int_y >= ptr_rcp_recup->button[5].coord.y && int_y <= (ptr_rcp_recup->button[5].coord.y + 72) && int_x >= ptr_rcp_recup->button[5].coord.x && int_x <= (ptr_rcp_recup->button[5].coord.x + 169) ){
+        ptr_rcp_recup->state = 1;
+        state_switch(ptr_rcp_recup);
+    }
     return 0;
 }

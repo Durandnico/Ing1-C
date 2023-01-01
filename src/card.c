@@ -24,15 +24,15 @@
 #include "../inc/blackjack.h"
 
 t_card
-create_card(t_flush color, t_cardname name, int int_hide)
+create_card(t_flush flush_color, t_cardname cdname_name, int int_hide)
 {
     t_card res; //card to create
 
     /*init all value*/
-    res.value = NAMETOVALUE(name);
-    res.color = color;
-    res.name  = name;
-    res.hide = int_hide;
+    res.value   =   NAMETOVALUE(cdname_name);
+    res.color   =   flush_color;
+    res.name    =   cdname_name;
+    res.hide    =   int_hide;
 
 
     return res;
@@ -55,11 +55,11 @@ generate_random_card(int int_hide)
 
 
 char*
-ccolor_to_string(t_card stru_card)
+ccolor_to_string(t_card cd_card)
 {
      
     /*No need to explain*/
-    switch (stru_card.color)
+    switch (cd_card.color)
     {
     case DIAMOND:
         return "diamond/";
@@ -78,7 +78,7 @@ ccolor_to_string(t_card stru_card)
         break;
 
     default:
-        fprintf(stderr, "ERROR COLOR %d\n", stru_card.color);
+        fprintf(stderr, "ERROR COLOR %d\n", cd_card.color);
         break;
     }
 
@@ -87,11 +87,11 @@ ccolor_to_string(t_card stru_card)
 
 
 char*
-cname_to_string(t_card stru_card)
+cname_to_string(t_card cd_card)
 {
     
     /*No need to explain*/
-    switch (stru_card.name)
+    switch (cd_card.name)
     {
     case AS:
         return "ace.xpm";
@@ -133,7 +133,7 @@ cname_to_string(t_card stru_card)
         return "king.xpm";
         break;
     default:
-        fprintf(stderr, "ERROR cname_to_string %d\n", stru_card.name);
+        fprintf(stderr, "ERROR cname_to_string %d\n", cd_card.name);
         break;
     }
 

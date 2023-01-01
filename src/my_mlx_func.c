@@ -16,7 +16,7 @@
  *  \version 1.0
  *  \date Tue 27 December 2022 - 23:25:29
  *
- *  \brief 
+ *  \brief some of my functions for mlx
  *
  *
  */
@@ -26,7 +26,7 @@
 
 
 int
-show_card(t_recup* rcp_recup, t_card* cd_card)
+show_card(t_recup* ptr_rcp_recup, t_card* ptr_cd_card)
 {
 
     char* img_dir = malloc(35);
@@ -34,12 +34,12 @@ show_card(t_recup* rcp_recup, t_card* cd_card)
     
     /*Get correct texture path*/
     strcpy(img_dir, "texture/cards/");
-    //if(cd_card->hide){
-    //    strcat(img_dir, "hide.xpm");
-    //}
-    ////else{
+    if(ptr_cd_card->hide){
+        strcat(img_dir, "back.xpm");
+    }
+    else{
         /*Get correct color folder*/   
-        tmp = ccolor_to_string(*cd_card);
+        tmp = ccolor_to_string(*ptr_cd_card);
         /*Cas d'erreur*/
         if( tmp == NULL ){
             return 1;
@@ -48,23 +48,23 @@ show_card(t_recup* rcp_recup, t_card* cd_card)
         tmp = NULL;
 
         /*Get correct card*/
-        tmp = cname_to_string(*cd_card);
+        tmp = cname_to_string(*ptr_cd_card);
         /*Case d'erreur*/
         if( tmp == NULL){
             return 1;
         }
         img_dir = strcat(img_dir, tmp); 
-    //}
+    }
     
     /*Load image*/
-    cd_card->img.img = mlx_xpm_file_to_image(rcp_recup->mlx, img_dir, &cd_card->img.width, &cd_card->img.height);
-    cd_card->img.addr = mlx_get_data_addr(cd_card->img.img, &cd_card->img.bits_per_pixel, &cd_card->img.line_length, &cd_card->img.endian);
+    ptr_cd_card->img.img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, img_dir, &ptr_cd_card->img.width, &ptr_cd_card->img.height);
+    ptr_cd_card->img.addr = mlx_get_data_addr(ptr_cd_card->img.img, &ptr_cd_card->img.bits_per_pixel, &ptr_cd_card->img.line_length, &ptr_cd_card->img.endian);
 
     /*Show image*/
-    if(cd_card->hide){
-        mlx_put_image_to_window(rcp_recup->mlx, rcp_recup->win, cd_card->img.img, cd_card->img.coord.x + 150, cd_card->img.coord.y - 40 );
+    if(ptr_cd_card->hide){
+        mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_cd_card->img.img, ptr_cd_card->img.coord.x + 150, ptr_cd_card->img.coord.y - 40 );
     }else{
-        mlx_put_image_to_window(rcp_recup->mlx, rcp_recup->win, cd_card->img.img, cd_card->img.coord.x , cd_card->img.coord.y );
+        mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_cd_card->img.img, ptr_cd_card->img.coord.x , ptr_cd_card->img.coord.y );
     }
     return 0;
 }   
@@ -111,7 +111,17 @@ void show_everything(t_recup* ptr_rcp_recup)
         calc_score(ptr_rcp_recup, &ptr_rcp_recup->ingame[i]);
     }
 
-    if(ptr_rcp_recup -> state == 1){
+    /*if dealer shows and ACE && got enough chips, propose for assurance*/
+    /*
+     * NOT INCLUDED
+     */
+    //if(ptr_rcp_recup->ingame[1].card_in_hand == 2 && ptr_rcp_recup->ingame[0].hand[0].name == AS && ptr_rcp_recup->ingame[1].token >= 1.5 * ptr_rcp_recup->current_bet ){
+    //    /*do stuff*/
+    //
+    //}
+    //else 
+    
+    if (ptr_rcp_recup -> state == 1){
         /*show button HIT and STAY*/
         mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_rcp_recup->button[1].img, ptr_rcp_recup->button[1].coord.x, ptr_rcp_recup->button[1].coord.y);
         mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_rcp_recup->button[2].img, ptr_rcp_recup->button[2].coord.x, ptr_rcp_recup->button[2].coord.y);
@@ -123,10 +133,14 @@ void show_everything(t_recup* ptr_rcp_recup)
             ptr_rcp_recup->x2 = 1;
 
             /*if splittable show split button*/
-            if(ptr_rcp_recup->ingame[1].hand[0].value == ptr_rcp_recup->ingame[1].hand[1].value){
-                mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_rcp_recup->button[3].img, ptr_rcp_recup->button[3].coord.x, ptr_rcp_recup->button[3].coord.y);
-                ptr_rcp_recup->split = 1;
-            }
+            /*
+             * NOT INCLUDED (bonus and busy)
+             */
+            //if(ptr_rcp_recup->ingame[1].hand[0].value == ptr_rcp_recup->ingame[1].hand[1].value){
+            //    
+            //    mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_rcp_recup->button[3].img, ptr_rcp_recup->button[3].coord.x, ptr_rcp_recup->button[3].coord.y);
+            //    ptr_rcp_recup->split = 1;
+            //}
         }
     }
 
@@ -144,6 +158,11 @@ void show_betting(t_recup* ptr_rcp_recup) {
     
     /*show correct bet and wallet*/
     show_bet_wallet(ptr_rcp_recup, ptr_rcp_recup->ingame[1]);
+
+    /*if there is a bet, show next button*/
+    if(ptr_rcp_recup->current_bet != 0){
+        mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_rcp_recup->button[4].img, ptr_rcp_recup->button[4].coord.x, ptr_rcp_recup->button[4].coord.y);
+    }
 }
 
 
@@ -157,6 +176,11 @@ show_score(t_recup* ptr_rcp_recup, t_player* ptr_pl_player)
 void
 show_bet_wallet(t_recup* ptr_rcp_recup, t_player pl_player)
 {
+    int     int_color; //color of the wallet text;
+
+    /*if empty wallet, draw in red !*/
+    int_color   =   (pl_player.token == 0) ? 0x00FF0000 : 0x00000000;
+
     mlx_string_put(ptr_rcp_recup->mlx, ptr_rcp_recup->win,  140 , 38 , 0x00000000, itoa(ptr_rcp_recup->current_bet));
-    mlx_string_put(ptr_rcp_recup->mlx, ptr_rcp_recup->win, 140 , 80 , 0x00000000, itoa(pl_player.token));     
+    mlx_string_put(ptr_rcp_recup->mlx, ptr_rcp_recup->win, 140 , 80 , int_color, itoa(pl_player.token));     
 }

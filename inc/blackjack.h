@@ -12,7 +12,7 @@
 
 
 /*! 
- *  \file blackJack.h
+ *  \file blackjack.h
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Mon 26 December 2022 - 20:34:39
@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include "../minilibx-linux/mlx.h"
 
 
@@ -45,19 +46,24 @@
      *  \brief 
      */
     #define WINDOW_HEIGHT 720
-
-    /*! 
-     *  \def ENTER
-     *  \brief keycode of ENTER
-     */
-    #define ENTER 65293
     
-
     /*! 
      *  \def TOKEN_INIT
      *  \brief number of token the player as at first
      */
     #define TOKEN_INIT 700
+    
+    /*! 
+     *  \def LEFT_CLICK
+     *  \brief keycode of LEFT_CLICK
+     */
+    #define LEFT_CLICK 1
+    
+    /*! 
+     *  \def RIGHT_CLICK
+     *  \brief keycode RIGHT_CLICK
+     */
+    #define RIGHT_CLICK 3
     
     
 /*----------                MACRO                  ----------*/
@@ -195,20 +201,6 @@ typedef struct      s_player
 
 
 /*!
- *  \struct t_key
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Wed 28 December 2022 - 15:31:08
- *  \brief 
- *  \param enter    : bool, true if enter key is press
- */
-
-typedef struct      s_key 
-{
-    int     enter;
-}                   t_key;
-
-/*!
  *  \struct t_recup
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
@@ -223,7 +215,6 @@ typedef struct      s_key
  *  \param button           : image of the different button
  *  \param x2               : if player can do a double
  *  \param split            : if player can do a split
- *  \param datakey          : contain if key are press of not 
  *  \param current_bet      : current bet of the player
  */
 typedef struct      s_recup
@@ -237,7 +228,6 @@ typedef struct      s_recup
     t_img       *button;
     int         x2;
     int         split;
-    t_key       datakey;
     int         current_bet;
 }                   t_recup;
 
@@ -246,21 +236,21 @@ typedef struct      s_recup
 
 
 /*!
- *  \fn t_card create_card(int int_value, t_flush color, t_cardname name)
+ *  \fn t_card create_card(t_flush flush_color, t_cardname cdname_name, int int_hide)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Mon 26 December 2022 - 22:40:19
  *  \brief create a card with given intels
- *  \param color    : kind of the card
- *  \param name     : name of the card (queen / king)
- *  \param hdie     : if the card is hide or not
+ *  \param flush_color      : kind of the card
+ *  \param cdname_name      : name of the card (queen / king)
+ *  \param int_hide         : if the card is hide or not
  *  \return a card with given value
  */
-t_card create_card(t_flush color, t_cardname name, int int_hide);
+t_card create_card(t_flush flush_color, t_cardname cdname_name, int int_hide);
 
 
 /*!
- *  \fn t_card generate_random_card(void)
+ *  \fn t_card generate_random_card(int int_hide)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Mon 26 December 2022 - 22:54:13
@@ -271,36 +261,36 @@ t_card create_card(t_flush color, t_cardname name, int int_hide);
 t_card generate_random_card(int int_hide);
 
 /*!
- *  \fn char* ccolor_to_string(t_card stru_card)
+ *  \fn char* ccolor_to_string(t_card cd_card)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Tue 27 December 2022 - 23:55:03
  *  \brief get the correct directory for the card
- *  \param card     : card to get the color of
+ *  \param cd_card     : card to get the color of
  *  \return the color of the card in a string
  */
-char* ccolor_to_string(t_card stru_card);
+char* ccolor_to_string(t_card cd_card);
 
 /*!
- *  \fn char* cname_to_string(t_card stru_card)
+ *  \fn char* cname_to_string(t_card cd_card)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Wed 28 December 2022 - 00:18:15
  *  \brief get the correct NAME.xpm for the card
- *  \param card     : card to get the name of
+ *  \param cd_card     : card to get the name of
  *  \return the name of the card in a string
  */
-char* cname_to_string(t_card stru_card);
+char* cname_to_string(t_card cd_card);
 
 
 /*!
- *  \proc void draw_card(t_player* ptr_pl_player)
+ *  \proc void draw_card(t_player* ptr_pl_player, int int_hide)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Thu 29 December 2022 - 04:02:35
  *  \brief make the player hit a card
- *  \param player   : pointeur to a player
- *  \param hide     : if the card will be show (== 0) or hide (==1)
+ *  \param ptr_pl_player    : pointeur to a player
+ *  \param int_hide         : if the card will be show (== 0) or hide (==1)
  */
 void draw_card(t_player* ptr_pl_player, int int_hide);
 
@@ -309,56 +299,47 @@ void draw_card(t_player* ptr_pl_player, int int_hide);
 
 
 /*!
- *  \proc void init(t_recup recup)
+ *  \proc void init(t_recup* ptr_rcp_recup)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Mon 26 December 2022 - 23:38:32
  *  \brief loads images, create board, malloc players, init hook functs, (do a bunch of thing)  
- *  \param recup    : contain all data of the window
+ *  \param ptr_rcp_recup    : contain all data of the window
  */
-void init(t_recup* recup);
+void init(t_recup* ptr_rcp_recup);
 
 
 /*!
- *  \proc void inti_button(t_recup* rcp_recup )
+ *  \proc void inti_button(t_recup* ptr_rcp_recup )
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Mon 26 December 2022 - 23:48:40
  *  \brief init all button, ( load images, set coordà ready to summon
- *  \param recup    : contain all data of the window
+ *  \param ptr_rcp_recup    : contain all data of the window
  */
-void init_button(t_recup* rcp_recup);
+void init_button(t_recup* ptr_rcp_recup);
+
 
 /*!
- *  \proc void init_key(t_recup* rcp_recup)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Wed 28 December 2022 - 15:40:07
- *  \brief init all key to false (not press)
- *  \param recup    : contain all data of the window
- */
-void init_key(t_recup* rcp_recup);
-
-/*!
- *  \proc void init_hook(t_recup* rcp_recup)
+ *  \proc void init_hook(t_recup* ptr_rcp_recup)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Wed 28 December 2022 - 16:01:13
  *  \brief init all hook func
- *  \param recup    : contain all data of the window
+ *  \param ptr_rcp_recup    : contain all data of the window
  */
-void init_hook(t_recup* rcp_recup);
+void init_hook(t_recup* ptr_rcp_recup);
 
 
 /*!
- *  \proc void init_bets(t_recup* prcp_recup)
+ *  \proc void init_bets(t_recup* ptr_rcp_recup)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Wed 28 December 2022 - 23:20:36
  *  \brief init all chip button
- *  \param recup    : pointeur to recup of all data for the window
+ *  \param ptr_rcp_recup    : pointeur to recup of all data for the window
  */
-void init_bets_background(t_recup* prcp_recup);
+void init_bets_background(t_recup* ptr_rcp_recup);
 
 
 /*!
@@ -376,70 +357,46 @@ void init_bet_money_score(t_recup* ptr_rcp_recup);
 
 
 /*!
- *  \fn int key_release(int int_keycode, t_recup* rcp_recup)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Wed 28 December 2022 - 15:37:12
- *  \brief if a key is release, set it value to false
- *  \param keycode      : code of the pressed key 
- *  \param recup        : data for mlx
- *  \return 0 mandatory fo mlx_hook
- */
-int key_release(int int_keycode, t_recup* rcp_recup);
-
-/*!
- *  \fn int key_press(int int_keycode, t_recup* rcp_recup)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Wed 28 December 2022 - 15:14:57
- *  \brief if a key is press, set it value to true
- *  \param keycode      : code of the pressed key 
- *  \param recup        : data for mlx
- *  \return 0 mandatory fo mlx_hook 
- */
-int key_press(int int_keycode, t_recup* rcp_recup);
-
-/*!
- *  \fn int mouse_press(int int_button, int int_x, int int_y, t_recup* rcp_recup)
+ *  \fn int mouse_press(int int_button, int int_x, int int_y, t_recup* ptr_rcp_recup)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Wed 28 December 2022 - 18:37:56
  *  \brief 
- *  \param button   : code of the pressed button
- *  \param x        : x pos of the mouse
- *  \param y        ; y pos of the mouse     
- *  \param recup    : data for mlx
+ *  \param int_button       : code of the pressed button
+ *  \param int_x            : x pos of the mouse
+ *  \param int_y            : y pos of the mouse     
+ *  \param ptr_rcp_recup    : data for mlx
  *  \return 0 mandatory fo mlx_hook 
  */
-int mouse_press(int int_button, int int_x, int int_y, t_recup* rcp_recup);
+int mouse_press(int int_button, int int_x, int int_y, t_recup* ptr_rcp_recup);
 
 
 /*--------------------             MY_MLX_FUNC.C             --------------------*/
 
 
 /*!
- *  \fn int show_card(t_recup* recup, t_card* card)
+ *  \fn int show_card(t_recup* ptr_rcp_recup, t_card* ptr_cd_card)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Tue 27 December 2022 - 23:44:33
  *  \brief show in the windows a card
- *  \param recup    : pointeur to recup of all data for the window
- *  \param card     : pointeur to a card
+ *  \param ptr_rcp_recup    : pointeur to recup of all data for the window
+ *  \param ptr_cd_card      : pointeur to a card
  *  \return load and show the card in the screen (0 => fail, 1 => sucess)
  */
-int show_card(t_recup* recup, t_card* card);
+int show_card(t_recup* ptr_rcp_recup, t_card* ptr_cd_card);
 
 
 /*!
- *  \proc void drawn_sprite(t_recup* recup, t_img img)
+ *  \proc void drawn_sprite(t_img* ptr_img_base, t_img img_to_add, int int_x, int int_y)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Thu 29 December 2022 - 00:36:36
  *  \brief draw pixel by pixel the sprite on the board (to make chips board transparent)
- *  \param ptr_img_base     : base image
- *  \param img_to_add       : image to copy on the other one
- *  \param x                : x pos where to draw the sprite
- *  \param y                : y pos where to draw the sprite
+ *  \param ptr_img_base         : base image
+ *  \param img_to_add           : image to copy on the other one
+ *  \param int_x                : x pos where to draw the sprite
+ *  \param int_y                : y pos where to draw the sprite
  */
 void drawn_sprite(t_img* ptr_img_base, t_img img_to_add, int int_x, int int_y);
 
@@ -450,7 +407,7 @@ void drawn_sprite(t_img* ptr_img_base, t_img img_to_add, int int_x, int int_y);
  *  \version 1.0
  *  \date Thu 29 December 2022 - 23:29:23
  *  \brief update the window for playing
- *  \param ptr_recup    : all data for the window
+ *  \param ptr_rcp_recup    : all data for the window
  */
 void show_everything(t_recup* ptr_rcp_recup);
 
@@ -479,13 +436,13 @@ void show_score(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
 
 
 /*!
- *  \proc void show_bet_wallet(t_recup* ptr_rcp_recup)
+ *  \proc void show_bet_wallet(t_recup* ptr_rcp_recup, t_player ptr_player)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Fri 30 December 2022 - 03:52:51
  *  \brief print wallet and current bet of the player
- *  \param ptr_recup    : all the data for the window
- *  \param player       : main player 
+ *  \param ptr_rcp_recup    : all the data for the window
+ *  \param pl_player        : main player 
  */
 void show_bet_wallet(t_recup* ptr_rcp_recup, t_player ptr_player);
 
@@ -494,7 +451,7 @@ void show_bet_wallet(t_recup* ptr_rcp_recup, t_player ptr_player);
 
 
 /*!
- *  \fn int exit_prog(t_recup* rcp_recup)
+ *  \fn int exit_prog(void)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Wed 28 December 2022 - 17:33:02
@@ -504,14 +461,14 @@ void show_bet_wallet(t_recup* ptr_rcp_recup, t_player ptr_player);
 int exit_prog(void);
 
 /*!
- *  \proc void state_switch(t_recup* prcp_recup)
+ *  \proc void state_switch(t_recup* ptr_rcp_recup)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0
  *  \date Thu 29 December 2022 - 03:51:36
  *  \brief change from betting to playing state and vis-versa
- *  \param recup    : all data for the window
+ *  \param ptr_rcp_recup    : all data for the window
  */
-void state_switch(t_recup* prcp_recup);
+void state_switch(t_recup* ptr_rcp_recup);
 
 
 /*----------              BJ_BUTTON.C              ----------*/
@@ -523,8 +480,8 @@ void state_switch(t_recup* prcp_recup);
  *  \version 1.0
  *  \date Thu 29 December 2022 - 18:54:20
  *  \brief hit a card for a player
- *  \param recup    : all data dor the window
- *  \param player   : pointeur to a player 
+ *  \param ptr_rcp_recup    : all data dor the window
+ *  \param ptr_pl_player    : pointeur to a player 
  */
 void hit(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
 
@@ -535,8 +492,8 @@ void hit(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
  *  \version 1.0
  *  \date Thu 29 December 2022 - 19:15:39
  *  \brief check score and update the window 
- *  \param recup    : all data dor the window
- *  \param player   : pointeur to a player 
+ *  \param ptr_rcp_recup    : all data dor the window
+ *  \param ptr_pl_player    : pointeur to a player 
  */
 void calc_score(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
 
@@ -547,8 +504,8 @@ void calc_score(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
  *  \version 1.0
  *  \date Fri 30 December 2022 - 05:01:47
  *  \brief make a double !
- *  \param recup    : all data dor the window
- *  \param player   : pointeur to a player 
+ *  \param ptr_rcp_recup    : all data dor the window
+ *  \param ptr_pl_player    : pointeur to a player 
  */
 void double_hit(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
 
@@ -565,7 +522,7 @@ void double_hit(t_recup* ptr_rcp_recup, t_player* ptr_pl_player);
 void stay(t_recup* ptr_rcp_recup, int int_cas);
 
 
-/*              END             */
+/*----------              MY_FUNC.C              ----------*/
 
 
 /*!
