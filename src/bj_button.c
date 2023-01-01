@@ -116,6 +116,7 @@ void stay(t_recup* ptr_rcp_recup, int int_cas) {
         while(ptr_rcp_recup->ingame[0].total_value < 17){
             draw_card(&ptr_rcp_recup->ingame[0], 0);
             ptr_rcp_recup->ingame[0].total_value += ptr_rcp_recup->ingame[0].hand[ptr_rcp_recup->ingame[0].card_in_hand - 1].value; 
+            calc_score(ptr_rcp_recup, &ptr_rcp_recup->ingame[0]);
         }
     }
 

@@ -111,16 +111,6 @@ void show_everything(t_recup* ptr_rcp_recup)
         calc_score(ptr_rcp_recup, &ptr_rcp_recup->ingame[i]);
     }
 
-    /*if dealer shows and ACE && got enough chips, propose for assurance*/
-    /*
-     * NOT INCLUDED
-     */
-    //if(ptr_rcp_recup->ingame[1].card_in_hand == 2 && ptr_rcp_recup->ingame[0].hand[0].name == AS && ptr_rcp_recup->ingame[1].token >= 1.5 * ptr_rcp_recup->current_bet ){
-    //    /*do stuff*/
-    //
-    //}
-    //else 
-    
     if (ptr_rcp_recup -> state == 1){
         /*show button HIT and STAY*/
         mlx_put_image_to_window(ptr_rcp_recup->mlx, ptr_rcp_recup->win, ptr_rcp_recup->button[1].img, ptr_rcp_recup->button[1].coord.x, ptr_rcp_recup->button[1].coord.y);

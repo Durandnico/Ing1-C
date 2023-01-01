@@ -55,12 +55,17 @@ state_switch(t_recup* ptr_rcp_recup)
                 ptr_rcp_recup->ingame[j].total_value += ptr_rcp_recup->ingame[j].hand[i].value;
             }     
         }
-
         /*the hiden card must not be count in tha dealer score*/
         ptr_rcp_recup->ingame[0].total_value -= ptr_rcp_recup->ingame[0].hand[1].value;    
         
         /*show board, card, button, score*/
         show_everything(ptr_rcp_recup);
+
+
+        /*if got 21 skip plays*/
+        if( ptr_rcp_recup->ingame[0].total_value == 21 || ( ptr_rcp_recup->ingame[0].hand[0].value + ptr_rcp_recup->ingame[0].hand[1].value) == 21 ){
+            stay(ptr_rcp_recup, 1);
+        }
     }
 
     /*else switch from playing to betting*/
