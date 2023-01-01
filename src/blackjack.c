@@ -10,6 +10,13 @@
 /*                                                                              */
 /* **************************************************************************** */
 
+/*!
+*  \mainpage Programme
+*  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+*  \section INFO
+*  \brief TD9-Blackjack
+*/
+
 /*! 
  *  \file blackjack.c
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>

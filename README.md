@@ -34,10 +34,12 @@ Tutoriel :
 Pour bet :
     -click gauche ajoute un bet
     -click droit  enlève un bet
+
 pendant le jeu:
     -hit    : tire une carte
     -stay   : passe au tour du dealer
     -double : lors du premier tire de carte, hit, double la mise et stay
+
 NON-INCLUS:
     -Assurance
     -Split
