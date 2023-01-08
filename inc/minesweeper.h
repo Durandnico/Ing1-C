@@ -213,6 +213,27 @@ int mouse_press(int int_keycode, int int_x, int int_y, t_recup* ptr_rcp_recup);
 void show_everything(t_recup* ptr_rcp_recup);
 
 /*!
+ *  \proc void change_button_image(t_button* ptr_btn_button, t_img img_new)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Sat 07 January 2023 - 20:03:45
+ *  \brief 
+ *  \param 
+ */
+void change_button_image(t_button* ptr_btn_button, t_img img_new);
+
+/*!
+ *  \fn t_img get_correct_xpm(int int_target)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Sun 08 January 2023 - 00:02:47
+ *  \brief 
+ *  \param 
+ *  \return 
+ */
+t_img get_correct_xpm(t_recup*, t_button);
+
+/*!
  *  \fn int rand_int(int int_target)
  *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
  *  \version 1.0

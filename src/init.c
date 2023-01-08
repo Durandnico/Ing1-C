@@ -107,13 +107,19 @@ init_background(t_recup* ptr_rcp_recup)
         }
 
         for(j = LENGHT_CASE / 8; j < LENGHT_CASE/3; j++){
+            /*left corners*/
             my_mlx_pixel_put(&ptr_rcp_recup->img_background, i, j, 0x00ffffff);
             my_mlx_pixel_put(&ptr_rcp_recup->img_background, i, ptr_rcp_recup->img_background.int_height - 1 - j, 0x00ffffff);
-        
+            
+            /*right corners*/
             my_mlx_pixel_put(&ptr_rcp_recup->img_background, ptr_rcp_recup->img_background.int_width - 1 - i, j,0x00ffffff);
             my_mlx_pixel_put(&ptr_rcp_recup->img_background, ptr_rcp_recup->img_background.int_width - 1 - i, ptr_rcp_recup->img_background.int_height - 1 - j,0x00ffffff);
         }
     }
+
+    for(i = 9; i < ptr_rcp_recup->img_background.int_width - 10; i+= LENGHT_CASE)
+        for(j = 10; j < ptr_rcp_recup->img_background.int_height - 10; j++)
+            my_mlx_pixel_put(&ptr_rcp_recup->img_background, i, j, 0x007f7f7f);
 
 }
 
@@ -124,14 +130,23 @@ init_sprites(t_recup* ptr_rcp_recup)
     int i; //loop variable
 
     /*allocate memory size*/
-    ptr_rcp_recup->ptr_img_sprites = malloc(2 * sizeof(t_img));
+    ptr_rcp_recup->ptr_img_sprites = malloc(11 * sizeof(t_img));
 
     /*load image*/
     ptr_rcp_recup->ptr_img_sprites[0].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/hide.xpm", &ptr_rcp_recup->ptr_img_sprites[0].int_width, &ptr_rcp_recup->ptr_img_sprites[0].int_height);
     ptr_rcp_recup->ptr_img_sprites[1].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/empty.xpm", &ptr_rcp_recup->ptr_img_sprites[1].int_width, &ptr_rcp_recup->ptr_img_sprites[1].int_height);
+    ptr_rcp_recup->ptr_img_sprites[2].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/1.xpm", &ptr_rcp_recup->ptr_img_sprites[2].int_width, &ptr_rcp_recup->ptr_img_sprites[2].int_height);
+    ptr_rcp_recup->ptr_img_sprites[3].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/2.xpm", &ptr_rcp_recup->ptr_img_sprites[3].int_width, &ptr_rcp_recup->ptr_img_sprites[3].int_height);
+    ptr_rcp_recup->ptr_img_sprites[4].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/3.xpm", &ptr_rcp_recup->ptr_img_sprites[4].int_width, &ptr_rcp_recup->ptr_img_sprites[4].int_height);
+    ptr_rcp_recup->ptr_img_sprites[5].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/4.xpm", &ptr_rcp_recup->ptr_img_sprites[5].int_width, &ptr_rcp_recup->ptr_img_sprites[5].int_height);
+    ptr_rcp_recup->ptr_img_sprites[6].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/5.xpm", &ptr_rcp_recup->ptr_img_sprites[6].int_width, &ptr_rcp_recup->ptr_img_sprites[6].int_height);
+    ptr_rcp_recup->ptr_img_sprites[7].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/6.xpm", &ptr_rcp_recup->ptr_img_sprites[7].int_width, &ptr_rcp_recup->ptr_img_sprites[7].int_height);
+    ptr_rcp_recup->ptr_img_sprites[8].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/7.xpm", &ptr_rcp_recup->ptr_img_sprites[8].int_width, &ptr_rcp_recup->ptr_img_sprites[8].int_height);
+    ptr_rcp_recup->ptr_img_sprites[9].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/8.xpm", &ptr_rcp_recup->ptr_img_sprites[9].int_width, &ptr_rcp_recup->ptr_img_sprites[9].int_height);
+    ptr_rcp_recup->ptr_img_sprites[10].ptr_void_img = mlx_xpm_file_to_image(ptr_rcp_recup->ptr_void_mlx, "texture/9.xpm", &ptr_rcp_recup->ptr_img_sprites[10].int_width, &ptr_rcp_recup->ptr_img_sprites[10].int_height);
 
     /*get data*/
-    for(i = 0; i < 2; i++){ 
+    for(i = 0; i < 11; i++){ 
         ptr_rcp_recup->ptr_img_sprites[i].ptr_char_addr = mlx_get_data_addr( ptr_rcp_recup->ptr_img_sprites[i].ptr_void_img, &ptr_rcp_recup->ptr_img_sprites[i].int_bits_per_pixel, &ptr_rcp_recup->ptr_img_sprites[i].int_line_length, &ptr_rcp_recup->ptr_img_sprites[i].int_endian);
     }
 }
@@ -166,6 +181,7 @@ init_board(t_recup* ptr_rcp_recup)
             ptr_rcp_recup->pptr_btn_board[i][j].int_state = 0;
             ptr_rcp_recup->pptr_btn_board[i][j].int_isBombe = 0;
             ptr_rcp_recup->pptr_btn_board[i][j].int_flaged = 0;
+            ptr_rcp_recup->pptr_btn_board[i][j].int_neighbor = 0;
         }
     }
 }
