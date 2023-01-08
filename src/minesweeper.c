@@ -26,8 +26,23 @@
 
 
 int
-exit_prog(void* a, void* b)
+exit_prog(t_recup* ptr_rcp_recup)
 {
+    mlx_destroy_image(ptr_rcp_recup->ptr_void_mlx, ptr_rcp_recup->img_background.ptr_void_img);
+
+    /*free button*/
+    for(int i = 0; i < ptr_rcp_recup->int_window_height;i++)
+        free(ptr_rcp_recup->pptr_btn_board[i]);
+    free(ptr_rcp_recup->pptr_btn_board);
+
+    /*free images*/
+    for(int i = 0; i < 11; i++)
+        mlx_destroy_image(ptr_rcp_recup->ptr_void_mlx, ptr_rcp_recup->ptr_img_sprites[i].ptr_void_img);
+    free(ptr_rcp_recup->ptr_img_sprites);
+
+    mlx_destroy_window(ptr_rcp_recup->ptr_void_mlx, ptr_rcp_recup->ptr_void_win);
+    mlx_destroy_display(ptr_rcp_recup->ptr_void_mlx);
+
     exit(0);
     return (0);
 }

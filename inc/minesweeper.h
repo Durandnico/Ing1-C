@@ -129,7 +129,7 @@ typedef struct      s_recup
  *  \param 
  *  \return 
  */
-int exit_prog(void*, void*);
+int exit_prog(t_recup*);
 
 /*!
  *  \proc void parsing(t_recup* ptr_rcp_recup, char** argv)
@@ -277,6 +277,16 @@ int case_clicked(int keycode, int int_x, int int_y, void* ptr_rcp_recup);
  *  \return 
  */
 int reveal(t_recup* ptr_rcp_recup, int int_x, int int_y);
+
+/*!
+ *  \proc void fail(t_recup* ptr_rcp_recup)
+ *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
+ *  \version 1.0
+ *  \date Sun 08 January 2023 - 00:52:06
+ *  \brief 
+ *  \param 
+ */
+void end(t_recup* ptr_rcp_recup, int int_win);
 
 /*!
  *  \fn t_button create_button(t_img img_sprite, int (*ptr_intf_func)(void*), int int_x, int int_y)

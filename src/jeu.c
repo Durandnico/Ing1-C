@@ -144,14 +144,7 @@ int reveal(t_recup* ptr_rcp_recup, int int_x, int int_y)
     return 0;
 }
 
-/*!
- *  \proc void fail(t_recup* ptr_rcp_recup)
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Sun 08 January 2023 - 00:52:06
- *  \brief 
- *  \param 
- */
+
 void end(t_recup* ptr_rcp_recup, int int_win)
 {
     int i;  //loop variable

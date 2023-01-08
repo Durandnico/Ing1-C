@@ -156,7 +156,7 @@ void
 init_hook(t_recup* ptr_rcp_recup)
 {
     /*red cross to exit*/
-    mlx_hook(ptr_rcp_recup->ptr_void_win, 17, 0L, exit_prog, 0);
+    mlx_hook(ptr_rcp_recup->ptr_void_win, 17, 0L, exit_prog, ptr_rcp_recup);
 
     /*mouse click*/
     mlx_hook(ptr_rcp_recup->ptr_void_win, 4, 1L<<2, mouse_press, ptr_rcp_recup);
