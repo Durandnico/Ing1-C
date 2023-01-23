@@ -114,8 +114,8 @@ init_button(t_recup* ptr_rcp_recup)
     ptr_rcp_recup->button[1].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/HIT.xpm", &ptr_rcp_recup->button[1].width, &ptr_rcp_recup->button[1].height);
     ptr_rcp_recup->button[2].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/STAY.xpm", &ptr_rcp_recup->button[2].width, &ptr_rcp_recup->button[2].height);
     ptr_rcp_recup->button[3].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/SPLIT.xpm", &ptr_rcp_recup->button[3].width, &ptr_rcp_recup->button[3].height);
-    ptr_rcp_recup->button[4].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/HIT.xpm", &ptr_rcp_recup->button[4].width, &ptr_rcp_recup->button[4].height);
-    ptr_rcp_recup->button[5].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/SPLIT.xpm", &ptr_rcp_recup->button[5].width, &ptr_rcp_recup->button[5].height);
+    ptr_rcp_recup->button[4].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/VALIDER.xpm", &ptr_rcp_recup->button[4].width, &ptr_rcp_recup->button[4].height);
+    ptr_rcp_recup->button[5].img = mlx_xpm_file_to_image(ptr_rcp_recup->mlx, "texture/RESTART.xpm", &ptr_rcp_recup->button[5].width, &ptr_rcp_recup->button[5].height);
 
     for( i = 0; i < 5; i++){
         /*get data.*/
@@ -130,8 +130,8 @@ init_button(t_recup* ptr_rcp_recup)
 
     ptr_rcp_recup->button[4].coord.x = 550;
     ptr_rcp_recup->button[4].coord.y = 525;
-    ptr_rcp_recup->button[5].coord.x = 10;
-    ptr_rcp_recup->button[5].coord.y = 400;
+    ptr_rcp_recup->button[5].coord.x = int_x;
+    ptr_rcp_recup->button[5].coord.y = 325;
 }
 
 

@@ -70,7 +70,7 @@ state_switch(t_recup* ptr_rcp_recup)
 
 
         /*if got 21 skip plays*/
-        if( ptr_rcp_recup->ingame[0].total_value == 21 || ( ptr_rcp_recup->ingame[0].hand[0].value + ptr_rcp_recup->ingame[0].hand[1].value) == 21 ){
+        if( ptr_rcp_recup->ingame[1].total_value == 21 || ( ptr_rcp_recup->ingame[0].hand[0].value + ptr_rcp_recup->ingame[0].hand[1].value) == 21 ){
             stay(ptr_rcp_recup, 1);
         }
     }
