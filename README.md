@@ -17,7 +17,7 @@ Cela créera aussi l'éxecutable.
 ***
 Pour lancer l'exécutable :
 ```sh
-./bin/TP8-9
+./bin/TP8
 ```
 #### Supprimer les dossiers bin (executable), obj (fichiers .o) et doc (DoxyFile)
 ***

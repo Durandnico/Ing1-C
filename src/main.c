@@ -2,7 +2,7 @@
 *  \mainpage Programme
 *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
 *  \section INFO
-*  \brief TD8-9
+*  \brief TD8
 */
 
 /*! 
