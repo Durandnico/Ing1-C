@@ -1,17 +1,6 @@
 #ifndef __TD6_H
 #define __TD6_H
 
-/*! 
- *  \file TD6.h
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Wed 30 November 2022 - 09:53:58
- *
- *  \brief Headers of TD6.c
- *
- *
- */
-
 // librairies
 #include <stdlib.h>
 #include <stdio.h>

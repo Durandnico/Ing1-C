@@ -1,17 +1,6 @@
 #ifndef __PUISSANCE4_H
 #define __PUISSANCE4_H
 
-/*! 
- *  \file puissance4.h
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Wed 30 November 2022 - 15:18:46
- *
- *  \brief Headers of puissance4.c
- *
- *
- */
-
 // librairies
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,17 +1,6 @@
 #ifndef __TRI_H
 #define __TRI_H
 
-/*! 
- *  \file tri.h
- *  \author DURAND Nicolas Erich Pierre <nicolas.durand@cy-tech.fr>
- *  \version 1.0
- *  \date Mon 05 December 2022 - 10:41:29
- *
- *  \brief Headers of tri.c
- *
- *
- */
-
 // librairies
 #include <stdlib.h>
 #include <stdio.h>
