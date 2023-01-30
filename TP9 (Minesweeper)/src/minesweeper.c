@@ -42,6 +42,7 @@ exit_prog(t_recup* ptr_rcp_recup)
 
     mlx_destroy_window(ptr_rcp_recup->ptr_void_mlx, ptr_rcp_recup->ptr_void_win);
     mlx_destroy_display(ptr_rcp_recup->ptr_void_mlx);
+    free(ptr_rcp_recup->ptr_void_mlx);
 
     exit(0);
     return (0);
